@@ -1,5 +1,7 @@
 <template>
-    <span>标签</span>
+  <div>
+    <Layout>label.vue</Layout>
+  </div>
 </template>
 
 <script lang="ts">

@@ -1,5 +1,9 @@
 <template>
-    <span>记账</span>
+  <div>
+    <layout>
+      money.vue
+    </layout>
+  </div>
 </template>
 
 <script lang="ts">
