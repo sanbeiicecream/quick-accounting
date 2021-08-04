@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter, {RouteConfig} from 'vue-router';
 import money from '@/views/Money.vue';
-import label from '@/views/Label.vue';
+import chart from '@/views/Chart.vue';
 import statistics from '@/views/Statistics.vue';
 import NotFound from '@/views/NotFound.vue';
 
@@ -17,8 +17,8 @@ const routes: Array<RouteConfig> = [
     component: money
   },
   {
-    path: '/label',
-    component: label
+    path: '/chart',
+    component: chart
   },
   {
     path: '/statistics',

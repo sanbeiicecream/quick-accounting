@@ -1,12 +1,12 @@
 <template>
   <div>
-    <Layout>label.vue</Layout>
+    <Layout>Chart.vue</Layout>
   </div>
 </template>
 
 <script lang="ts">
 export default {
-  name: 'LabelVue'
+  name: 'ChartVue'
 };
 </script>
 
