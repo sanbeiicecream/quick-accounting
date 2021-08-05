@@ -22,5 +22,11 @@ export default {
     flex-direction: column;
     justify-content: space-between;
     height: 100vh;
+    > .type-items-wrap{
+      flex-grow: 1;
+      padding-top: 50px;
+      align-self: center;
+      width: 80vw;
+    }
   }
 </style>

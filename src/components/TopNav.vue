@@ -12,12 +12,12 @@ import {Component} from 'vue-property-decorator'
 
 @Component
 export default class TopNav extends Vue{
-
-  selected: boolean
+  selected = false
   value = "pay"
-
   select($event: MouseEvent){
-    this.value = $event.target.classList[0] === "income"?"income":"pay"
+    if ($event.target !== null){
+      this.value = ($event.target as HTMLDivElement).classList[0] === "income"?"income":"pay"
+    }
   }
 }
 </script>
