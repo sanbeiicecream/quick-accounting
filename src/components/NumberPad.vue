@@ -39,13 +39,26 @@ export default class NumberPad extends Vue {
 
   inputContent(event: MouseEvent) {
     let inputNode = event.target as HTMLButtonElement;
-    let input = inputNode.textContent || '0';
+    let input = inputNode.textContent || '';
+    let matchArray = this.value.match(/[0-9,.]*/g) || [];
     inputNode.classList.add('clickStyle');
     setTimeout(() => {
       inputNode.classList.remove('clickStyle');
     }, 100);
-    if (this.value.length > 8) {
-      return;
+
+    if (matchArray.length > 0) {
+      let temArray = matchArray.filter((item) => {
+        return item.length > 0;
+      });
+      if (temArray.length === 1 && "+-×÷".indexOf(this.value.charAt(this.value.length - 1)) === -1 ) {
+        if (temArray[0].length >= 8) {
+          return;
+        }
+      } else if (temArray.length === 2) {
+        if (temArray[0].length >= 8 && temArray[1].length >= 8) {
+          return;
+        }
+      }
     }
     if (this.value === '0') {
       if (input === '.') {
@@ -61,12 +74,21 @@ export default class NumberPad extends Vue {
       } else if (this.value.indexOf('.') === -1) {
         this.value += input;
       }
-    } else if (this.value.indexOf('+') >= 0 || this.value.indexOf('-') >= 0 || this.value.indexOf('×') >= 0 || this.value.indexOf('÷') >= 0) {
-      (this.$refs.ok as HTMLButtonElement).textContent = '=';
-      this.value += input;
+    } else if (input === '0') {
+      if ('+-×÷'.indexOf(this.value.charAt(this.value.length - 1)) >= 0) {
+        this.value += input;
+      } else if (this.value.length > 0) {
+        this.value += input;
+      }
     } else {
-      this.value += input;
+      if (this.value.indexOf('+') >= 0 || this.value.indexOf('-') >= 0 || this.value.indexOf('×') >= 0 || this.value.indexOf('÷') >= 0) {
+        (this.$refs.ok as HTMLButtonElement).textContent = '=';
+        this.value += input;
+      } else {
+        this.value += input;
+      }
     }
+
   }
 
   clear() {
@@ -81,7 +103,7 @@ export default class NumberPad extends Vue {
   }
 
   addNote() {
-    console.log("xx")
+    console.log('xx');
   }
 
   clearAll() {
@@ -90,7 +112,7 @@ export default class NumberPad extends Vue {
   }
 
   mounted() {
-    let u = navigator.userAgent
+    let u = navigator.userAgent;
     let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
     let isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
     let container = this.$refs.container as HTMLDivElement;
@@ -142,26 +164,49 @@ export default class NumberPad extends Vue {
       } else {
         this.value += type;
       }
+      if (this.value.slice(0, -1).split('.').length > 1) {
+        if (this.value.slice(0, -1).split('.')[1].length > 2) {
+          this.value = parseFloat(this.value.slice(0, -1)).toFixed(2) + type;
+        }
+      }
     } else {
       this.value += type;
     }
   }
 
   ok() {
+    let isMinus = false;
     if ('+-×÷'.indexOf(this.value.charAt(this.value.length - 1)) >= 0) {
       this.value = this.value.slice(0, -1);
-    } else if (this.value.indexOf('+') >= 0 || this.value.indexOf('-') >= 0 || this.value.indexOf('×') >= 0 || this.value.indexOf('÷') >= 0) {
+      return;
+    } else if (this.value.charAt(0) === '-') {
+      isMinus = true;
+      this.value = this.value.slice(1, this.value.length);
+    }
+    if (this.value.indexOf('+') >= 0 || this.value.indexOf('-') >= 0 || this.value.indexOf('×') >= 0 || this.value.indexOf('÷') >= 0) {
+      let temValue = 0;
       if (this.value.split('+').length === 2) {
-        this.value = parseFloat(this.value.split('+')[0]) + parseFloat(this.value.split('+')[1]) + '';
+        temValue = parseFloat(this.value.split('+')[0]) + parseFloat(this.value.split('+')[1]);
       } else if (this.value.split('-').length === 2) {
-        this.value = parseFloat(this.value.split('-')[0]) - parseFloat(this.value.split('-')[1]) + '';
-      } else if (this.value.split('-').length === 3) {
-        this.value = (0 - parseFloat(this.value.split('-')[1])) - parseFloat(this.value.split('-')[2]) + '';
+        if (isMinus) {
+          temValue = (0 - parseFloat(this.value.split('-')[0])) - parseFloat(this.value.split('-')[1]);
+        } else {
+          temValue = parseFloat(this.value.split('-')[0]) - parseFloat(this.value.split('-')[1]);
+        }
       } else if (this.value.split('×').length === 2) {
-        this.value = parseFloat(this.value.split('×')[0]) * parseFloat(this.value.split('×')[1]) + '';
+        temValue = parseFloat(this.value.split('×')[0]) * parseFloat(this.value.split('×')[1]);
       } else {
-        this.value = parseFloat(this.value.split('÷')[0]) / parseFloat(this.value.split('÷')[1]) + '';
+        temValue = parseFloat(this.value.split('÷')[0]) / parseFloat(this.value.split('÷')[1]);
       }
+      if ((temValue + '').split('.').length > 1) {
+        if ((temValue + '').split('.')[1].length > 2) {
+          this.value = temValue.toFixed(2);
+        }
+      } else {
+        this.value = temValue + '';
+      }
+    } else {
+      console.log('提交');
     }
     (this.$refs.ok as HTMLButtonElement).textContent = '完成';
   }
