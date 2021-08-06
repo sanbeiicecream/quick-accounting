@@ -200,11 +200,10 @@ export default class NumberPad extends Vue {
       }
       if ((temValue + '').split('.').length > 1) {
         if ((temValue + '').split('.')[1].length > 2) {
-          this.value = temValue.toFixed(2);
+          temValue = temValue.toFixed(2);
         }
-      } else {
-        this.value = temValue + '';
       }
+      this.value = temValue + '';
     } else {
       console.log('提交');
     }
