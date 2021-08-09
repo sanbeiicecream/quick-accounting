@@ -200,7 +200,7 @@ export default class NumberPad extends Vue {
       }
       if ((temValue + '').split('.').length > 1) {
         if ((temValue + '').split('.')[1].length > 2) {
-          temValue = temValue.toFixed(2);
+          temValue = parseFloat(temValue.toFixed(2));
         }
       }
       this.value = temValue + '';
@@ -220,7 +220,6 @@ export default class NumberPad extends Vue {
   float: left;
   font-weight: bold;
   $height: 70px;
-
   > label {
     font-size: 15px;
     display: inline-block;
@@ -228,17 +227,16 @@ export default class NumberPad extends Vue {
     vertical-align: bottom;
     border-top: 1px solid #D3D3D3;
     font-family: Consolas, monospace;
-
     &:nth-child(1) {
       border-right: 1px solid #D3D3D3;
     }
 
     > input {
-      width: 70%;
+      width: 60%;
     }
 
     > span {
-      margin-left: 7px;
+      padding-left: 5px;
     }
   }
 
