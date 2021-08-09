@@ -1,19 +1,22 @@
 <template>
   <div class="money-container">
-      <TopNav/>
-      <AddType/>
-      <NumberPad/>
+    <TopNav />
+    <SelectTags />
+    <NumberPad />
   </div>
 </template>
 
 <script lang="ts">
-import TopNav from '@/components/TopNav.vue';
-import AddType from '@/components/AddType.vue';
-import NumberPad from '@/components/NumberPad.vue';
-export default {
-  name: 'Money',
-  components: {NumberPad, AddType, TopNav}
-};
+import {Component, Vue} from 'vue-property-decorator';
+import TopNav from '@/components/money/TopNav.vue';
+import NumberPad from '@/components/money/NumberPad.vue';
+import SelectTags from '@/components/money/SelectTags.vue';
+@Component({
+  components: {SelectTags, NumberPad, TopNav}
+})
+export default  class Money extends Vue{
+  name = 'Money'
+}
 </script>
 
 <style lang="scss" scoped>
@@ -24,7 +27,8 @@ export default {
     height: 100vh;
     > .type-items-wrap{
       flex-grow: 1;
-      padding-top: 50px;
+      padding-top: 38px;
+      padding-bottom: 38px;
       align-self: center;
       width: 80vw;
     }
