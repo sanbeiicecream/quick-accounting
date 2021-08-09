@@ -1,10 +1,9 @@
 import Vue from 'vue';
 import VueRouter, {RouteConfig} from 'vue-router';
-import money from '@/views/Money.vue';
-import chart from '@/views/Chart.vue';
-import statistics from '@/views/Statistics.vue';
 import NotFound from '@/views/NotFound.vue';
-
+import Statistics from '@/views/Statistics.vue';
+import Chart from '@/views/Chart.vue';
+import Money from '@/views/Money.vue';
 Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
@@ -14,18 +13,18 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/money',
-    component: money
+    component: Money
   },
   {
     path: '/chart',
-    component: chart
+    component: Chart
   },
   {
     path: '/statistics',
-    component: statistics
+    component: Statistics
   },
   {
-    path: "*",
+    path: '*',
     component: NotFound
   }
 ];
