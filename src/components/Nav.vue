@@ -27,7 +27,7 @@ nav{
   display: flex;
   flex-direction: row;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.25);
-  font-size: 15px;
+  font-size: 1em;
   > .item{
     padding: 2px 0;
     display: flex;
@@ -37,8 +37,8 @@ nav{
     flex-direction: column;
   }
     .icon{
-      width: 32px;
-      height: 32px;
+      width: 1.5em;
+      height: 1.5em;
     }
   > .selected{
     color: $color-heightLight;
