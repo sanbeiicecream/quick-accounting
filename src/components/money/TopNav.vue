@@ -20,6 +20,7 @@ export default class TopNav extends Vue{
   selected = false
   value = "pay"
   select($event: MouseEvent){
+    this.$store.state.selectedTagIds = []
     if ($event.target !== null){
       this.value = ($event.target as HTMLDivElement).classList[0] === "income"?"income":"pay"
       this.$store.state.payOrIncome = this.value

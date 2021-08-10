@@ -22,7 +22,8 @@ export default class Tags extends Vue {
   @Prop() leftButtonContent?: string;
   @Prop() rightButtonContent?: string;
   @Prop() isEdit?: boolean;
-  value = '';
+  @Prop(String) editValue!: string
+  value =  this.editValue.trim() || ""
 
   isExceed() {
     if (this.value.length >= 15) {

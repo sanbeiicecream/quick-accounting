@@ -4,18 +4,18 @@
       <li v-for="item in tagList" :key="item.id" :data-id="item.id" @touchstart.prevent="selectOrEdit"
           @touchend.prevent="end">{{ item.name }}
       </li>
-      <li v-if="selectedItemIds.length === 0" class="add" @click="add">
+      <li v-if="$store.state.selectedTagIds.length === 0" class="add" @click="add">
         <icon name="addTags"/>
       </li>
     </ol>
     <ol v-if="$store.state.payOrIncome === 'income' && $store.state.isAdd === 'no' && this.isEdit === false" class="type-items">
       <li v-for="item in tagList" :key="item.id" :data-id="item.id" @touchstart.prevent="selectOrEdit"
           @touchend.prevent="end">{{ item.name }}</li>
-      <li v-if="selectedItemIds.length === 0" class="add" @click="add">
+      <li v-if="$store.state.selectedTagIds.length === 0" class="add" @click="add">
         <icon name="addTags"/>
       </li>
     </ol>
-    <Tags :edit-id.sync="editId" :is-edit.sync="isEdit" :placeholder="placeholder" :left-button-content="leftButtonContent" :right-button-content="rightButtonContent" v-if="$store.state.isAdd === 'is' || this.isEdit"/>
+    <Tags :edit-id.sync="editId" :is-edit.sync="isEdit" :placeholder="placeholder" :left-button-content="leftButtonContent" :right-button-content="rightButtonContent" :edit-value="editValue" v-if="$store.state.isAdd === 'is' || this.isEdit"/>
   </div>
 </template>
 
@@ -29,7 +29,6 @@ import Tags from '@/components/money/Tags.vue';
   components: {Tags, AddTags}
 })
 export default class AddType extends Vue {
-  selectedItemIds: string[] = [];
   editId = '';
   timer = -1;
   placeholder = ""
@@ -38,6 +37,7 @@ export default class AddType extends Vue {
   isEdit = false
   leftButtonContent = ""
   rightButtonContent = ""
+  editValue = ""
 
   created() {
     this.$store.commit('fetchTags');
@@ -53,13 +53,14 @@ export default class AddType extends Vue {
 
   add() {
     this.$store.state.isAdd = 'is';
-    this.placeholder = "请输入需要添加的标签名"
+    this.placeholder = "标签名"
     this.leftButtonContent = "取消"
     this.rightButtonContent = "添加"
+    this.editValue = ""
   }
 
   selectOrEdit(event: MouseEvent) {
-    if (this.selectedItemIds.length === 0){
+    if (this.$store.state.selectedTagIds.length === 0){
       this.timer = setTimeout(() => {
         this.isLongDown = true;
         this.edit(event);
@@ -79,19 +80,20 @@ export default class AddType extends Vue {
   edit(event: MouseEvent) {
     this.isEdit = true
     this.editId = (event.target as HTMLOListElement).dataset.id || ""
-    this.placeholder = "请输入修改后的标签名"
+    this.placeholder = "修改后的标签名"
     this.leftButtonContent = "删除"
     this.rightButtonContent = "更新"
+    this.editValue = (event.target as HTMLOListElement).textContent || ""
   }
 
   select(event: MouseEvent) {
     let liNode = event.target as HTMLOListElement;
     if (liNode.className === 'selected') {
       liNode.classList.remove('selected');
-      this.selectedItemIds = this.selectedItemIds.filter(item => item !== liNode.dataset.id);
-    } else {
+      this.$store.state.selectedTagIds = this.$store.state.selectedTagIds.filter(function (item: string){return item !== liNode.dataset.id;})
+      } else {
       liNode.classList.add('selected');
-      this.selectedItemIds.push(liNode.dataset.id + '');
+      this.$store.state.selectedTagIds.push(liNode.dataset.id + '');
     }
   }
 }
@@ -101,14 +103,14 @@ export default class AddType extends Vue {
 @import "~@/assets/style/helper.scss";
 
 .type-items-wrap {
-  $font-size: 18px;
+  $font-size: 16px;
   overflow: auto;
 
   > .type-items {
     display: flex;
     flex-wrap: wrap;
     justify-content: start;
-
+    align-items: start;
     > li {
       display: block;
       font-size: $font-size;
@@ -120,7 +122,6 @@ export default class AddType extends Vue {
       margin-bottom: 8px;
       text-align: center;
       word-break: break-all;
-      align-self: baseline;
       user-select: none;
     }
 
@@ -128,10 +129,7 @@ export default class AddType extends Vue {
       display: flex;
       justify-content: center;
       align-items: center;
-
       > .icon {
-        width: $font-size;
-        height: $font-size;
       }
     }
 

@@ -23,20 +23,27 @@
     <button class="ok" @click="ok" ref="ok">完成</button>
     <button @click="inputContent">0</button>
     <button @click="inputContent">.</button>
-    <button>今天</button>
+    <button class="date" @click="isVisible = true">{{createAt}}</button>
     <button @click="calculate('÷')">÷</button>
+    <simple-calendar :is-visible.sync="isVisible" v-if="isVisible"/>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import {Component} from 'vue-property-decorator';
-
-@Component
+import SimpleCalendar from '@/components/money/SimpleCalendar.vue';
+import {Toast} from 'vant';
+import {RecordItem, Tag} from '@/custom';
+Vue.use(Toast);
+@Component({
+  components: {SimpleCalendar}
+})
 export default class NumberPad extends Vue {
   value = '0';
   noteValue = '';
-
+  isVisible = false
+  createAt = "今天"
   inputContent(event: MouseEvent) {
     let inputNode = event.target as HTMLButtonElement;
     let input = inputNode.textContent || '';
@@ -205,7 +212,27 @@ export default class NumberPad extends Vue {
       }
       this.value = temValue + '';
     } else {
-      console.log('提交');
+      if (this.$store.state.selectedTagIds.length > 0){
+        let currentRecord: RecordItem = {tags: [], notes:"",amount:"",createdAt:""}
+        this.$store.state.selectedTagIds.forEach((item: string) => {
+          let currentTag = this.$store.state.tagList.find(((item1: Tag) => item1.id === item))
+          if (currentTag){
+            currentRecord.tags.push(currentTag)
+          }
+        })
+        currentRecord.amount = this.value
+        currentRecord.notes = this.noteValue
+        if (this.createAt === "今天"){
+          currentRecord.createdAt = new Date().toISOString()
+        }else {
+          currentRecord.createdAt = this.createAt
+        }
+        this.$store.commit("saveRecord", currentRecord)
+        this.$router.push({path:"/statistics"})
+        Toast.success({message: "保存成功",duration: 1000})
+      }else {
+        Toast("请选择至少一个标签")
+      }
     }
     (this.$refs.ok as HTMLButtonElement).textContent = '完成';
   }
@@ -243,7 +270,9 @@ export default class NumberPad extends Vue {
   > button {
     height: $height;
     width: 20%;
-
+    &.date{
+      font-size: 13px;
+    }
     &:nth-child(3) {
       border-bottom: 1px solid #D3D3D3;
       border-top: 1px solid #D3D3D3;

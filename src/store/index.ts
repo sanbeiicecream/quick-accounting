@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import {State, Tag} from '@/custom';
+import {RecordItem, State, Tag} from '@/custom';
 Vue.use(Vuex)
 const state: State = {
+  selectedTagIds: [],
   payOrIncome: "pay",
   isAdd: "no",
   tagList: [],
@@ -31,7 +32,16 @@ const store =  new Vuex.Store({
         window.localStorage.setItem("tagList",JSON.stringify(state.tagList.filter(item => item.id !== payload)))
         store.commit("fetchTags")
       }
-    }
+    },
+    fetchRecordList(state){
+      state.recordList = JSON.parse(window.localStorage.getItem("recordList") || "")
+    },
+    saveRecord(state,payload: RecordItem){
+      state.recordList.push(payload)
+      window.localStorage.setItem("recordList",JSON.stringify(state.recordList))
+      store.commit("fetchRecordList")
+      state.selectedTagIds = []
+    },
   },
   actions: {
   },
