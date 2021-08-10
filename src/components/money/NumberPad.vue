@@ -35,6 +35,7 @@ import {Component} from 'vue-property-decorator';
 import SimpleCalendar from '@/components/money/SimpleCalendar.vue';
 import {Toast} from 'vant';
 import {RecordItem, Tag} from '@/custom';
+import {Dayjs} from 'dayjs';
 Vue.use(Toast);
 @Component({
   components: {SimpleCalendar}
@@ -225,7 +226,7 @@ export default class NumberPad extends Vue {
         if (this.createAt === "今天"){
           currentRecord.createdAt = new Date().toISOString()
         }else {
-          currentRecord.createdAt = this.createAt
+          currentRecord.createdAt = new Dayjs(this.createAt).toISOString()
         }
         this.$store.commit("saveRecord", currentRecord)
         this.$router.push({path:"/statistics"})
