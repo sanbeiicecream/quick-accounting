@@ -1,7 +1,7 @@
 <template>
   <div class="container-wrap" ref="container">
     <label class="note">
-      <span>备注：</span><input type="text" v-model="noteValue" @input.prevent="addNote">
+      <span>备注：</span><input type="text" v-model="noteValue" />
     </label>
     <label class="amount">
       <span>金额：</span><input v-bind:value="value" onfocus="this.blur()" type="text">
@@ -35,7 +35,9 @@ import {Component} from 'vue-property-decorator';
 import SimpleCalendar from '@/components/money/SimpleCalendar.vue';
 import {Toast} from 'vant';
 import {RecordItem, Tag} from '@/custom';
-import {Dayjs} from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+import dayjs from 'dayjs';
+dayjs.extend(customParseFormat)
 Vue.use(Toast);
 @Component({
   components: {SimpleCalendar}
@@ -108,10 +110,6 @@ export default class NumberPad extends Vue {
         (this.$refs.ok as HTMLButtonElement).textContent = '完成';
       }
     }
-  }
-
-  addNote() {
-    console.log('xx');
   }
 
   clearAll() {
@@ -214,7 +212,7 @@ export default class NumberPad extends Vue {
       this.value = temValue + '';
     } else {
       if (this.$store.state.selectedTagIds.length > 0){
-        let currentRecord: RecordItem = {tags: [], notes:"",amount:"",createdAt:""}
+        let currentRecord: RecordItem = {tags: [], notes:"",amount:"",createdAt:"",type:""}
         this.$store.state.selectedTagIds.forEach((item: string) => {
           let currentTag = this.$store.state.tagList.find(((item1: Tag) => item1.id === item))
           if (currentTag){
@@ -224,9 +222,14 @@ export default class NumberPad extends Vue {
         currentRecord.amount = this.value
         currentRecord.notes = this.noteValue
         if (this.createAt === "今天"){
-          currentRecord.createdAt = new Date().toISOString()
+          currentRecord.createdAt = dayjs().toISOString()
         }else {
-          currentRecord.createdAt = new Dayjs(this.createAt).toISOString()
+          currentRecord.createdAt = dayjs(this.createAt,"YYYY-M-D").toISOString()
+        }
+        if (this.$store.state.payOrIncome === "pay"){
+          currentRecord.type = "-"
+        }else if(this.$store.state.payOrIncome === "income"){
+          currentRecord.type = "+"
         }
         this.$store.commit("saveRecord", currentRecord)
         this.$router.push({path:"/statistics"})

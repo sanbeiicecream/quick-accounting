@@ -4,12 +4,13 @@ import NotFound from '@/views/NotFound.vue';
 import Statistics from '@/views/Statistics.vue';
 import Chart from '@/views/Chart.vue';
 import Money from '@/views/Money.vue';
+import UpdateStatistics from '@/components/Statistics/UpdateStatistics.vue';
 Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
   {
     path: '/',
-    redirect: '/money'
+    redirect: '/statistics'
   },
   {
     path: '/money',
@@ -22,6 +23,10 @@ const routes: Array<RouteConfig> = [
   {
     path: '/statistics',
     component: Statistics
+  },
+  {
+    path: '/update',
+    component: UpdateStatistics
   },
   {
     path: '*',

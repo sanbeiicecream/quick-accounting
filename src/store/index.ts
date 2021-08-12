@@ -1,13 +1,16 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import {RecordItem, State, Tag} from '@/custom';
+import {getRecordHash} from '@/lib/getRecordHash';
 Vue.use(Vuex)
 const state: State = {
+  currentMonth: "",
   selectedTagIds: [],
   payOrIncome: "pay",
   isAdd: "no",
   tagList: [],
-  recordList: []
+  recordList: [],
+  recordListHash: []
 }
 const store =  new Vuex.Store({
   state,
@@ -41,7 +44,12 @@ const store =  new Vuex.Store({
       window.localStorage.setItem("recordList",JSON.stringify(state.recordList))
       store.commit("fetchRecordList")
       state.selectedTagIds = []
+      store.commit("getRecordListHash")
     },
+    getRecordListHash(state){
+      state.recordListHash = getRecordHash(state.recordList)
+    }
+
   },
   actions: {
   },

@@ -20,7 +20,7 @@ export default class SimpleCalendar extends Vue {
   @Prop() isVisible!: boolean;
   isShow = false;
 
-  @Watch('isVisible', {immediate: true})
+  @Watch('isVisible',{immediate: true})
   onIsShow(val: boolean) {
     this.isShow = val;
   }
