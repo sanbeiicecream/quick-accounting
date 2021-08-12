@@ -10,7 +10,8 @@ const state: State = {
   isAdd: "no",
   tagList: [],
   recordList: [],
-  recordListHash: []
+  recordListHash: [],
+  currentRecord: {tags:[],notes:"",amount:"",createdAt:"",type:""}
 }
 const store =  new Vuex.Store({
   state,

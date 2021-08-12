@@ -4,7 +4,7 @@
       <div v-for="item in groupMonthRecordList" :key="item.date">
         <div class="content">
           <div class="content-top">{{ item.date }}</div>
-          <div v-for="(record,index) in item.value" :key="index"  class="content-bottom" @click="update">
+          <div v-for="(record,index) in item.value" :key="index"  class="content-bottom" @click="update(record)" >
             <span v-for="(tags,index) in record.tags" :key="index">
               <span class="tag">{{ tags.name }}</span>
             </span>
@@ -28,12 +28,15 @@ export default class RecordDisplay extends Vue {
   get currentMonthRecordHash() {
     return this.$store.state.recordListHash[parseInt(this.$store.state.currentMonth) - 1];
   }
-
-  get groupMonthRecordList() {
+  get groupMonthRecordList(){
     let monthRecord = this.currentMonthRecordHash.recordList;
-    let recordList = [];
-    let recordArray = [];
-    let record = {};
+    let recordArray: RecordItem[];
+    type Record = {
+      date: string
+      value: RecordItem[]
+    };
+    let recordList: Record[] = [];
+    let record: Record;
     let previousDay = '';
     monthRecord.forEach((item: RecordItem) => {
       let formatDate = dayjs(item.createdAt).format('YYYY年M月D日');
@@ -42,7 +45,7 @@ export default class RecordDisplay extends Vue {
         record['date'] = formatDate;
         record['value'] = recordArray;
       } else {
-        record = {};
+        record = {date:"",value:[]};
         previousDay = formatDate;
         recordArray = [];
         recordArray.push(item);
@@ -54,7 +57,9 @@ export default class RecordDisplay extends Vue {
     return recordList;
   }
 
-  update(){
+  update(record){
+    this.$store.state.currentRecord = record
+    window.localStorage.setItem("currentRecord",JSON.stringify(record))
     this.$router.push("/update")
   }
 }

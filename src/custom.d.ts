@@ -6,6 +6,7 @@ export interface State  {
   tagList: Tag[]
   recordList: RecordItem[]
   recordListHash: RecordHash[]
+  currentRecord: RecordItem
 }
 export type Tag = {
   id: string
