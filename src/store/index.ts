@@ -68,6 +68,9 @@ const store =  new Vuex.Store({
       )
       state.recordList.splice(index,1,record)
       store.commit('saveRecord')
+    },
+    getCurrentRecord(state) {
+      state.currentRecord = JSON.parse(window.localStorage.getItem("currentRecord") || "")
     }
 
   },

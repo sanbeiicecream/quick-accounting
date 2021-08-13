@@ -70,7 +70,6 @@ export default class UpdateStatistics extends Vue {
   onSelect(item: {name: string}) {
     this.showActionSheet = false;
     this.tagType = item.name
-    console.log(this.actionItem,item.name)
     if (this.actionItem !== item.name){
       this.selectResult = []
       this.currentTagNames = "无"
@@ -87,7 +86,10 @@ export default class UpdateStatistics extends Vue {
   }
   @Watch('$store.state.currentRecord',{immediate: true})
   onInit(){
-    let currentRecord = this.$store.state.currentRecord
+    let currentRecord = JSON.parse(window.localStorage.getItem("currentRecord") || "")
+    if (currentRecord === null){
+      return
+    }
     this.amount = currentRecord.amount
     this.notes = currentRecord.notes
     this.createAt = currentRecord.createdAt
@@ -142,7 +144,9 @@ export default class UpdateStatistics extends Vue {
       this.currentTagNames = this.findNameById(this.defaultTagIds)
       if (this.defaultTagType === "-"){
         this.tagType = "支出"
+        this.tagList = this.tagPayList
       }else {
+        this.tagList = this.tagIncomeList
         this.tagType = "收入"
       }
     }else if (this.amount === ""){
