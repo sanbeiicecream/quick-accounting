@@ -38,7 +38,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import {Component} from 'vue-property-decorator';
+import {Component, Watch} from 'vue-property-decorator';
 import {Field, CellGroup, Popup, Cell, Checkbox, CheckboxGroup, Calendar, ActionSheet, Toast} from 'vant';
 import {RecordItem, Tag} from '@/custom';
 import dayjs from 'dayjs';
@@ -85,8 +85,8 @@ export default class UpdateStatistics extends Vue {
   showPopup() {
     this.show = true;
   }
-  created(){
-    this.$store.state.currentRecord = JSON.parse(window.localStorage.getItem("currentRecord") || "")
+  @Watch('$store.state.currentRecord',{immediate: true})
+  onInit(){
     let currentRecord = this.$store.state.currentRecord
     this.amount = currentRecord.amount
     this.notes = currentRecord.notes
@@ -145,9 +145,15 @@ export default class UpdateStatistics extends Vue {
       }else {
         this.tagType = "收入"
       }
-    }else {
+    }else if (this.amount === ""){
+      Toast("必须要有一个值呢！")
+    } else {
       const tags = this.findTagsById(this.selectResult)
-      const record: RecordItem = {tags:tags,notes: this.notes,amount: this.amount,createdAt: this.createAt,type: ""}
+      let amount = this.amount
+      if (parseFloat(this.amount) < 0){
+        amount = amount.slice(1)
+      }
+      const record: RecordItem = {tags:tags,notes: this.notes,amount: amount,createdAt: this.createAt,type: ""}
       if (this.tagType === "支出"){
         record.type = "-"
       }else {
@@ -183,13 +189,19 @@ export default class UpdateStatistics extends Vue {
   }
   notesInput(){
     if (this.notes.length >= 15){
-      Toast("只能输入15个字符")
-      this.notes = this.notes.slice(0,-1)
+      Toast("只能输入25个字符")
+      this.notes = this.notes.slice(0,25)
     }
   }
   amountInput(){
     if (this.amount.length >= 8){
       Toast("只能计算8位数呢！")
+      this.amount = this.amount.slice(0,8)
+    }else if (this.amount.length >= 2){
+      if (this.amount[0] === "0" && this.amount[1] !== "."){
+        Toast("格式不太对！")
+        this.amount = ""
+      }
     }
   }
 }

@@ -22,9 +22,13 @@ import Vue from 'vue';
 import {Component} from 'vue-property-decorator';
 import dayjs from 'dayjs';
 import {RecordItem} from '@/custom';
+import {Toast} from 'vant';
 
 @Component
 export default class RecordDisplay extends Vue {
+  created(){
+    this.$store.commit("getRecordListHash")
+  }
   get currentMonthRecordHash() {
     return this.$store.state.recordListHash[parseInt(this.$store.state.currentMonth) - 1];
   }
