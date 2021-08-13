@@ -41,7 +41,9 @@ const store =  new Vuex.Store({
       state.recordList = JSON.parse(window.localStorage.getItem("recordList") || "")
     },
     saveRecord(state,payload: RecordItem){
-      state.recordList.push(payload)
+      if (payload !== undefined){
+        state.recordList.push(payload)
+      }
       window.localStorage.setItem("recordList",JSON.stringify(state.recordList))
       store.commit("fetchRecordList")
       state.selectedTagIds = []
@@ -49,6 +51,23 @@ const store =  new Vuex.Store({
     },
     getRecordListHash(state){
       state.recordListHash = getRecordHash(state.recordList)
+    },
+    removeRecord(state,record: RecordItem){
+      store.commit("fetchRecordList")
+      const index = state.recordList.findIndex((item: RecordItem) =>
+        item.createdAt === record.createdAt
+      )
+      state.recordList.splice(index,1)
+      store.commit('saveRecord')
+    },
+    updateRecord(state,record: RecordItem){
+      const currentRecord = JSON.parse(window.localStorage.getItem("currentRecord") || "")
+      store.commit("fetchRecordList")
+      const index = state.recordList.findIndex((item: RecordItem) =>
+        item.createdAt === currentRecord.createdAt
+      )
+      state.recordList.splice(index,1,record)
+      store.commit('saveRecord')
     }
 
   },

@@ -57,7 +57,7 @@ export default class RecordDisplay extends Vue {
     return recordList;
   }
 
-  update(record){
+  update(record: RecordItem){
     this.$store.state.currentRecord = record
     window.localStorage.setItem("currentRecord",JSON.stringify(record))
     this.$router.push("/update")

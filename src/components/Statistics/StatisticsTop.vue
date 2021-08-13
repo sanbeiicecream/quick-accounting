@@ -6,12 +6,12 @@
       <div>{{currentMonth + "月结余"}}</div>
     </div>
     <div class="payAndIncome">
-      <div class="pay">
-        <div>{{pay}}</div>
-        <div>{{currentMonth + "月收入"}}</div>
-      </div>
       <div class="income">
         <div>{{income}}</div>
+        <div>{{currentMonth + "月收入"}}</div>
+      </div>
+      <div class="pay">
+        <div>{{pay}}</div>
         <div>{{currentMonth + "月支出"}}</div>
       </div>
     </div>
@@ -121,7 +121,7 @@ export default class Statistics extends Vue {
         justify-content: space-around;
         font-size: 1.2em;
         line-height: 0.8em;
-        > .pay{
+        > .income{
           flex-grow: 1;
           text-align: center;
           border-right:1px solid black;
@@ -129,7 +129,7 @@ export default class Statistics extends Vue {
             font-size: 0.6em;
           }
         }
-        > .income{
+        > .pay{
           vertical-align: bottom;
           flex-grow: 1;
           text-align: center;

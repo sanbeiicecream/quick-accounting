@@ -6,20 +6,32 @@
     </div>
     <div class="content">
       <van-cell-group>
-        <van-field v-model="tags" label="标签名" placeholder="请输入标签名" />
-      </van-cell-group>
-      <van-cell-group>
-        <van-field v-model="amount" label="金额" placeholder="请输入金额" />
-      </van-cell-group>
-      <van-cell-group>
-        <van-field v-model="createdAt" label="日期" placeholder="请选择日期" />
-      </van-cell-group>
-      <van-cell-group>
-        <van-field v-model="notes" label="备注" placeholder="请输入备注" />
+
+        <van-cell is-link title="收入类型" @click="showActionSheet = true" :value="tagType" />
+        <van-action-sheet v-model="showActionSheet" :actions="actions" @select="onSelect"/>
+        <van-cell title="标签" @click="showPopup" closeable >{{ currentTagNames }}</van-cell>
+        <van-popup
+            v-model="show"
+            closeable
+            position="bottom"
+            :style="{ height: '30%' }"
+        >
+          <van-checkbox-group v-model="selectResult" direction="horizontal" :max="3" @change="onChange">
+            <van-checkbox v-for="(tag,index) in tagList" :key="index" :name="tag.id" shape="square">{{tag.name}}</van-checkbox>
+          </van-checkbox-group>
+        </van-popup>
+
+
+        <van-field v-model="amount" label="金额" type="number" placeholder="请输入金额" @input="amountInput"/>
+<!--        <van-field v-model="createdAt" label="日期" placeholder="请选择日期" />-->
+        <van-cell title="日期" :value="displayDate" @click="showCalendar = true" />
+        <van-calendar v-model="showCalendar" @confirm="onConfirm" :min-date="minDate" :max-date="maxDate"/>
+        <van-field v-model="notes" @input="notesInput" label="备注" placeholder="请输入备注" />
       </van-cell-group>
     </div>
-    <div>
-      <button></button>
+    <div class="bottom">
+      <button class="remove" @click="remove">删除</button>
+      <button class="update" @click="update">更新</button>
     </div>
   </div>
 </template>
@@ -27,27 +39,158 @@
 <script lang="ts">
 import Vue from 'vue';
 import {Component} from 'vue-property-decorator';
-import {Field,CellGroup} from 'vant';
-
+import {Field, CellGroup, Popup, Cell, Checkbox, CheckboxGroup, Calendar, ActionSheet, Toast} from 'vant';
+import {RecordItem, Tag} from '@/custom';
+import dayjs from 'dayjs';
+Vue.use(Calendar)
 @Component(
-    {components:{[Field.name]: Field,[CellGroup.name]: CellGroup}}
+    {components:{[Field.name]: Field,[CellGroup.name]: CellGroup, [Popup.name]: Popup, [Cell.name]: Cell, [Checkbox.name]: Checkbox, [CheckboxGroup.name]:CheckboxGroup,[ActionSheet.name]: ActionSheet}
+    }
 )
 export default class UpdateStatistics extends Vue {
+  show = false
+  selectResult: string[] = []
+  currentTagNames = ""
+  defaultTagIds: string[] = []
+  defaultTagType = ""
+  tagIncomeList: Tag[] = []
+  tagPayList: Tag[] = []
+  tagList: Tag[] = []
+  minDate = dayjs().startOf("year").toDate()
+  maxDate = dayjs().endOf("year").toDate()
+  showCalendar = false
+  showActionSheet = false
+  displayDate = ""
+  actions = [{name: '支出'},{name: "收入"}]
+  amount = ""
+  tagType = ""
+  actionItem = ""
+  notes = ""
+  createAt = ""
+  onSelect(item: {name: string}) {
+    this.showActionSheet = false;
+    this.tagType = item.name
+    console.log(this.actionItem,item.name)
+    if (this.actionItem !== item.name){
+      this.selectResult = []
+      this.currentTagNames = "无"
+    }
+    if (item.name === "支出"){
+      this.tagList = this.tagPayList
+    }else {
+      this.tagList = this.tagIncomeList
+    }
+    this.actionItem = item.name
+  }
+  showPopup() {
+    this.show = true;
+  }
   created(){
-    this.$store.state.currentRecord = JSON.parse(window.localStorage.getItem("currentRecord"))
+    this.$store.state.currentRecord = JSON.parse(window.localStorage.getItem("currentRecord") || "")
+    let currentRecord = this.$store.state.currentRecord
+    this.amount = currentRecord.amount
+    this.notes = currentRecord.notes
+    this.createAt = currentRecord.createdAt
+    this.defaultTagType = currentRecord.tags[0].type
+    currentRecord.tags.forEach((item: Tag) =>{
+      this.selectResult.push(item.id)
+      this.defaultTagIds.push(item.id)
+      this.currentTagNames += item.name + " "
+    })
+    this.$store.commit("fetchTags")
+    this.$store.state.tagList.forEach((item: Tag) =>{
+      if (item.type === "+"){
+        this.tagIncomeList.push(item)
+      }else {
+        this.tagPayList.push(item)
+      }
+    })
+    if (currentRecord.tags[0].type === '-'){
+      this.tagType = "支出"
+      this.tagList = this.tagPayList
+      this.actionItem = "支出"
+    }else {
+      this.tagType = "收入"
+      this.tagList = this.tagIncomeList
+      this.actionItem = "收入"
+    }
+    this.displayDate = dayjs(currentRecord.createdAt).format("YYYY年M月D日")
   }
-  tags = ""
-  get notes(){
-    return this.$store.state.currentRecord.notes
-  }
-  get amount(){
-    return this.$store.state.currentRecord.amount
-  }
-  get createdAt(){
-    return this.$store.state.currentRecord.createdAt
-  }
+
   goBack(){
     this.$router.push("/statistics")
+  }
+  remove(){
+    this.$store.commit("removeRecord",this.$store.state.currentRecord)
+    this.goBack()
+  }
+  findTagsById(ids: string[]){
+    const selectTags: Tag[] = []
+    let tag: Tag | undefined
+    ids.forEach((id: string) => {
+      tag = this.tagList.find((item: Tag) => item.id === id)
+      if (tag !== undefined){
+        selectTags.push(tag)
+      }
+    })
+    return selectTags
+  }
+  update(){
+    if (this.currentTagNames === "无"){
+      Toast("请选择至少一个标签")
+      this.selectResult = this.defaultTagIds
+      this.currentTagNames = this.findNameById(this.defaultTagIds)
+      if (this.defaultTagType === "-"){
+        this.tagType = "支出"
+      }else {
+        this.tagType = "收入"
+      }
+    }else {
+      const tags = this.findTagsById(this.selectResult)
+      const record: RecordItem = {tags:tags,notes: this.notes,amount: this.amount,createdAt: this.createAt,type: ""}
+      if (this.tagType === "支出"){
+        record.type = "-"
+      }else {
+        record.type = "+"
+      }
+      this.$store.commit("updateRecord",record)
+      this.$router.push("/statistics")
+      Toast("更新成功")
+    }
+  }
+  findNameById(ids: string[]){
+    let name = ""
+    let tag: Tag | undefined
+    ids.forEach((id: string) => {
+      tag = this.$store.state.tagList.find((item: Tag) => item.id === id)
+      if (tag !== undefined){
+        name += tag.name + ' '
+      }
+    })
+    return name;
+  }
+  onChange(){
+    if (this.selectResult.length === 0){
+      this.currentTagNames = "无"
+    }else {
+      this.currentTagNames = this.findNameById(this.selectResult)
+    }
+  }
+  onConfirm(date: Date) {
+    this.showCalendar = false;
+    this.displayDate = dayjs(date).format("YYYY年M月D日")
+    this.createAt = dayjs(date).toISOString()
+  }
+  notesInput(){
+    if (this.notes.length >= 15){
+      Toast("只能输入15个字符")
+      this.notes = this.notes.slice(0,-1)
+    }
+  }
+  amountInput(){
+    if (this.amount.length >= 8){
+      Toast("只能计算8位数呢！")
+    }
   }
 }
 </script>
@@ -57,6 +200,7 @@ export default class UpdateStatistics extends Vue {
     background-color: #efefef;
     height: 100vh;
     width: 100vw;
+    position: relative;
     > .top{
       display: flex;
       align-items: center;
@@ -68,6 +212,24 @@ export default class UpdateStatistics extends Vue {
        height: 1em;
        margin-left: 5%;
        margin-right: 8%;
+      }
+    }
+    > .bottom{
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 7vh;
+      width: 100%;
+      background-color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      > .remove{
+        border-right: 1px solid #D0D0D0;
+        flex-grow: 1;
+      }
+      > .update{
+        flex-grow: 1;
       }
     }
   }
