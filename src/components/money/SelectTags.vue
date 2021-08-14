@@ -24,6 +24,7 @@ import Vue from 'vue';
 import {Component} from 'vue-property-decorator';
 import AddTags from '@/components/money/AddTag.vue';
 import Tags from '@/components/money/Tags.vue';
+import {Toast} from 'vant';
 
 @Component({
   components: {Tags, AddTags}
@@ -92,6 +93,10 @@ export default class AddType extends Vue {
       liNode.classList.remove('selected');
       this.$store.state.selectedTagIds = this.$store.state.selectedTagIds.filter(function (item: string){return item !== liNode.dataset.id;})
       } else {
+      if (this.$store.state.selectedTagIds.length >= 3){
+        Toast("只能添加3个标签呢！")
+        return;
+      }
       liNode.classList.add('selected');
       this.$store.state.selectedTagIds.push(liNode.dataset.id + '');
     }

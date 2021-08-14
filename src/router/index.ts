@@ -4,7 +4,7 @@ import NotFound from '@/views/NotFound.vue';
 import Statistics from '@/views/Statistics.vue';
 import Chart from '@/views/Chart.vue';
 import Money from '@/views/Money.vue';
-import UpdateStatistics from '@/components/Statistics/UpdateStatistics.vue';
+import UpdateStatistics from '@/components/statistics/UpdateStatistics.vue';
 Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [

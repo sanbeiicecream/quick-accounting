@@ -8,8 +8,8 @@
 </template>
 
 <script lang="ts">
-import StatisticsTop from '@/components/Statistics/StatisticsTop.vue';
-import RecordDisplay from '@/components/Statistics/RecordDisplay.vue';
+import StatisticsTop from '@/components/statistics/StatisticsTop.vue';
+import RecordDisplay from '@/components/statistics/RecordDisplay.vue';
 export default {
   name: 'Statistics',
   components: {RecordDisplay, StatisticsTop}

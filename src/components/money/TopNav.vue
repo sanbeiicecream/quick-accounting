@@ -3,7 +3,7 @@
   <div class="pay" :class="{selected: value === 'pay'}" @click="select">支出</div>
   <div class="income" :class="{selected: value === 'income'}" @click="select">收入</div>
   <div class="return">
-    <router-link to="/statistics" @click.native="getClick">
+    <router-link to="/statistics" @click.native="goBack">
       <icon name="return"/>
     </router-link>
   </div>
@@ -19,15 +19,16 @@ import {Component} from 'vue-property-decorator';
 export default class TopNav extends Vue{
   selected = false
   value = "pay"
-  select($event: MouseEvent){
+  select($event: Event){
     this.$store.state.selectedTagIds = []
     if ($event.target !== null){
       this.value = ($event.target as HTMLDivElement).classList[0] === "income"?"income":"pay"
       this.$store.state.payOrIncome = this.value
     }
   }
-  getClick(){
+  goBack(){
     this.$store.state.payOrIncome = "pay"
+    this.$store.state.selectedTagIds = []
   }
 }
 </script>
@@ -35,7 +36,7 @@ export default class TopNav extends Vue{
 <style lang="scss" scoped>
   .nav-top-wrap{
     display: flex;
-    background-color:	#A9A9A9;
+    background-color:	#D0D0D0;
     justify-content: center;
     font-size: 18px;
     height: 6vh;
