@@ -1,7 +1,7 @@
 import {RecordHash, RecordItem} from '@/custom';
 import dayjs from 'dayjs';
 
-export function getRecordHash(recordList: RecordItem[]){
+export function getRecordListHash(recordList: RecordItem[]){
   const recordListHash: RecordHash[] = []
   const month = [0,1,2,3,4,5,6,7,8,9,10,11]
   month.forEach((monthItem) => {

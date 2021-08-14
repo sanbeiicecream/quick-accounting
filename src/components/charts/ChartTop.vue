@@ -25,6 +25,7 @@ export default class ChartTop extends Vue {
       (item as HTMLSpanElement).classList.remove("selectPayOrIncome")
     })
     spanNode.classList.add("selectPayOrIncome")
+    this.$store.state.chartPayOrIncome = spanNode.textContent
   }
   selectOrderByTime(event: Event){
     let spanNode = event.target as HTMLSpanElement
@@ -33,6 +34,7 @@ export default class ChartTop extends Vue {
       (item as HTMLSpanElement).classList.remove("selectOrderByTime")
     })
     spanNode.classList.add("selectOrderByTime")
+    this.$store.state.chartOrderByTime = spanNode.textContent
   }
 
 }
