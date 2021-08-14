@@ -98,6 +98,7 @@ export default class Statistics extends Vue {
 .top-wrap{
   height: 18vh;
   background: #D0D0D0;
+  width: 100vw;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

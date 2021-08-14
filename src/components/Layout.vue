@@ -17,9 +17,11 @@ export default {
 .layout-wrapper {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
   height: 100vh;
-  > .content {
-    flex-grow: 1;
+  > .content{
+    width: 100vw;
   }
 }
 </style>

@@ -20,15 +20,17 @@ import {Component} from 'vue-property-decorator';
 export default class ChartTop extends Vue {
   selectPayOrIncome(event: Event){
     let spanNode = event.target as HTMLSpanElement
-    spanNode.parentNode.childNodes.forEach((item: HTMLSpanElement) => {
-      item.classList.remove("selectPayOrIncome")
+    if (spanNode.parentNode === null) return
+    spanNode.parentNode.childNodes.forEach((item) => {
+      (item as HTMLSpanElement).classList.remove("selectPayOrIncome")
     })
     spanNode.classList.add("selectPayOrIncome")
   }
   selectOrderByTime(event: Event){
     let spanNode = event.target as HTMLSpanElement
-    spanNode.parentNode.childNodes.forEach((item: HTMLSpanElement) => {
-      item.classList.remove("selectOrderByTime")
+    if (spanNode.parentNode === null) return
+    spanNode.parentNode.childNodes.forEach((item ) => {
+      (item as HTMLSpanElement).classList.remove("selectOrderByTime")
     })
     spanNode.classList.add("selectOrderByTime")
   }
@@ -44,9 +46,8 @@ export default class ChartTop extends Vue {
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    border: 1px solid red;
     .selectPayOrIncome{
-      border-bottom: 1px solid black;
+      border-bottom: 1.5px solid black;
     }
     .selectOrderByTime{
       background-color: black;
