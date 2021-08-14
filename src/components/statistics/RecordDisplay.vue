@@ -20,9 +20,8 @@
 <script lang="ts">
 import Vue from 'vue';
 import {Component} from 'vue-property-decorator';
-import dayjs from 'dayjs';
 import {RecordItem} from '@/custom';
-import {Toast} from 'vant';
+import {getGroupMonthRecordList} from '@/lib/getGroupMonthRecordList';
 
 @Component
 export default class RecordDisplay extends Vue {
@@ -33,32 +32,7 @@ export default class RecordDisplay extends Vue {
     return this.$store.state.recordListHash[parseInt(this.$store.state.currentMonth) - 1];
   }
   get groupMonthRecordList(){
-    let monthRecord = this.currentMonthRecordHash.recordList;
-    let recordArray: RecordItem[];
-    type Record = {
-      date: string
-      value: RecordItem[]
-    };
-    let recordList: Record[] = [];
-    let record: Record;
-    let previousDay = '';
-    monthRecord.forEach((item: RecordItem) => {
-      let formatDate = dayjs(item.createdAt).format('YYYY年M月D日');
-      if (previousDay === formatDate) {
-        recordArray.push(item);
-        record['date'] = formatDate;
-        record['value'] = recordArray;
-      } else {
-        record = {date:"",value:[]};
-        previousDay = formatDate;
-        recordArray = [];
-        recordArray.push(item);
-        record['date'] = formatDate;
-        record['value'] = recordArray;
-        recordList.push(record);
-      }
-    });
-    return recordList;
+    return getGroupMonthRecordList(this.currentMonthRecordHash.recordList)
   }
 
   update(record: RecordItem){

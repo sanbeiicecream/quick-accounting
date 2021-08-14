@@ -1,9 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import {RecordItem, State, Tag} from '@/custom';
-import {getRecordHash} from '@/lib/getRecordHash';
+import {getRecordListHash} from '@/lib/getRecordListHash';
 Vue.use(Vuex)
 const state: State = {
+  chartPayOrIncome: "支出",
+  chartOrderByTime: "周",
   currentMonth: "",
   selectedTagIds: [],
   payOrIncome: "pay",
@@ -39,6 +41,7 @@ const store =  new Vuex.Store({
     },
     fetchRecordList(state){
       state.recordList = JSON.parse(window.localStorage.getItem("recordList") || "")
+      store.commit("getRecordListHash")
     },
     saveRecord(state,payload: RecordItem){
       if (payload !== undefined){
@@ -50,7 +53,7 @@ const store =  new Vuex.Store({
       store.commit("getRecordListHash")
     },
     getRecordListHash(state){
-      state.recordListHash = getRecordHash(state.recordList)
+      state.recordListHash = getRecordListHash(state.recordList)
     },
     removeRecord(state,record: RecordItem){
       store.commit("fetchRecordList")

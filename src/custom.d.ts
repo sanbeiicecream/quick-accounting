@@ -1,4 +1,6 @@
 export interface State  {
+  chartPayOrIncome: string
+  chartOrderByTime: string
   currentMonth: string
   selectedTagIds: string[]
   payOrIncome: string
@@ -21,8 +23,8 @@ export type RecordItem = {
   type: string
 }
 type RecordHash = {
-  recordList?:RecordItem[],
-  total?:string,
-  pay?: string,
-  income?: string
+  recordList:RecordItem[],
+  total:string,
+  pay: string,
+  income: string
 }
