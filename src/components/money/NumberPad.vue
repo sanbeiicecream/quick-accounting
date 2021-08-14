@@ -6,23 +6,23 @@
     <label class="amount">
       <span>金额：</span><input v-bind:value="value" onfocus="this.blur()" type="text">
     </label>
-    <button @click="inputContent">1</button>
-    <button @click="inputContent">2</button>
-    <button @click="inputContent">3</button>
+    <button @click="inputAmount">1</button>
+    <button @click="inputAmount">2</button>
+    <button @click="inputAmount">3</button>
     <button @click="calculate('+')">+</button>
     <button @click="clear">清除</button>
-    <button @click="inputContent">4</button>
-    <button @click="inputContent">5</button>
-    <button @click="inputContent">6</button>
+    <button @click="inputAmount">4</button>
+    <button @click="inputAmount">5</button>
+    <button @click="inputAmount">6</button>
     <button @click="calculate('-')">-</button>
     <button @click="clearAll">清空</button>
-    <button @click="inputContent">7</button>
-    <button @click="inputContent">8</button>
-    <button @click="inputContent">9</button>
+    <button @click="inputAmount">7</button>
+    <button @click="inputAmount">8</button>
+    <button @click="inputAmount">9</button>
     <button @click="calculate('×')">×</button>
     <button class="ok" @click="ok" ref="ok">完成</button>
-    <button @click="inputContent">0</button>
-    <button @click="inputContent">.</button>
+    <button @click="inputAmount">0</button>
+    <button @click="inputAmount">.</button>
     <button class="date" @click="isVisible = true">{{createAt}}</button>
     <button @click="calculate('÷')">÷</button>
     <simple-calendar :is-visible.sync="isVisible" v-if="isVisible"/>
@@ -47,14 +47,14 @@ export default class NumberPad extends Vue {
   noteValue = '';
   isVisible = false
   createAt = "今天"
-  inputContent(event: MouseEvent) {
+  inputAmount(event: MouseEvent) {
     let inputNode = event.target as HTMLButtonElement;
     let input = inputNode.textContent || '';
     let matchArray = this.value.match(/[0-9,.]*/g) || [];
     inputNode.classList.add('clickStyle');
     setTimeout(() => {
       inputNode.classList.remove('clickStyle');
-    }, 100);
+    }, 120);
 
     if (matchArray.length > 0) {
       let temArray = matchArray.filter((item) => {
@@ -62,10 +62,12 @@ export default class NumberPad extends Vue {
       });
       if (temArray.length === 1 && "+-×÷".indexOf(this.value.charAt(this.value.length - 1)) === -1 ) {
         if (temArray[0].length >= 8) {
+          Toast({message: "计算金额不能超过8位数！",duration: 1000})
           return;
         }
       } else if (temArray.length === 2) {
-        if (temArray[0].length >= 8 && temArray[1].length >= 8) {
+        if (temArray[1].length >= 8) {
+          Toast({message: "计算金额不能超过8位数！",duration: 1000})
           return;
         }
       }
@@ -190,7 +192,7 @@ export default class NumberPad extends Vue {
       this.value = this.value.slice(1, this.value.length);
     }
     if (this.value.indexOf('+') >= 0 || this.value.indexOf('-') >= 0 || this.value.indexOf('×') >= 0 || this.value.indexOf('÷') >= 0) {
-      let temValue = 0;
+      let temValue: number;
       if (this.value.split('+').length === 2) {
         temValue = parseFloat(this.value.split('+')[0]) + parseFloat(this.value.split('+')[1]);
       } else if (this.value.split('-').length === 2) {
