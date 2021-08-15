@@ -50,6 +50,7 @@ export default class Tags extends Vue {
 
   remove() {
     this.$store.commit('removeTag', this.editId);
+    console.log(this.editId)
     this.$store.state.isAdd = 'no';
     this.$emit('update:isEdit', false);
     this.$emit('update:editId', '');

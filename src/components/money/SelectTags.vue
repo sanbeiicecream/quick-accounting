@@ -25,6 +25,7 @@ import {Component} from 'vue-property-decorator';
 import AddTags from '@/components/money/AddTag.vue';
 import Tags from '@/components/money/Tags.vue';
 import {Toast} from 'vant';
+import {createId} from '@/lib/createId';
 
 @Component({
   components: {Tags, AddTags}
@@ -42,6 +43,13 @@ export default class AddType extends Vue {
 
   created() {
     this.$store.commit('fetchTags');
+    if (this.$store.state.tagList.length === 0){
+      this.$store.commit("saveTag",{id:createId(),name:'衣',type:'-'})
+      this.$store.commit("saveTag",{id:createId(),name:'食',type:'-'})
+      this.$store.commit("saveTag",{id:createId(),name:'住',type:'-'})
+      this.$store.commit("saveTag",{id:createId(),name:'行',type:'-'})
+      this.$store.commit("saveTag",{id:createId(),name:'工资',type:'+'})
+    }
   }
 
   get tagList() {

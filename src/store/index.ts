@@ -34,8 +34,8 @@ const store =  new Vuex.Store({
       }
     },
     removeTag(state, payload: string){
-      if (payload){
-        window.localStorage.setItem("tagList",JSON.stringify(state.tagList.filter(item => item.id !== payload)))
+      if (payload !== ""){
+        window.localStorage.setItem("tagList",JSON.stringify(state.tagList.filter((item: Tag) => item.id !== payload)))
         store.commit("fetchTags")
       }
     },
