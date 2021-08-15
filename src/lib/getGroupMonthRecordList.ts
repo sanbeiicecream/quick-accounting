@@ -7,6 +7,9 @@ export function getGroupMonthRecordList(monthRecord:RecordItem[]){
     value: RecordItem[]
   };
   const recordList: Record[] = [];
+  if (monthRecord === undefined){
+    return []
+  }
   let record: Record;
   let previousDay = '';
   monthRecord.forEach((item: RecordItem) => {

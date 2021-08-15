@@ -19,7 +19,7 @@ const store =  new Vuex.Store({
   state,
   mutations: {
     fetchTags(state): void{
-      state.tagList = JSON.parse(window.localStorage.getItem("tagList") || "")
+      state.tagList = JSON.parse(window.localStorage.getItem("tagList") || "[]")
     },
     saveTag(state,payload: Tag): void{
       state.tagList.push(payload)
@@ -40,7 +40,7 @@ const store =  new Vuex.Store({
       }
     },
     fetchRecordList(state){
-      state.recordList = JSON.parse(window.localStorage.getItem("recordList") || "")
+      state.recordList = JSON.parse(window.localStorage.getItem("recordList") || '[]')
       store.commit("getRecordListHash")
     },
     saveRecord(state,payload: RecordItem){
@@ -53,7 +53,9 @@ const store =  new Vuex.Store({
       store.commit("getRecordListHash")
     },
     getRecordListHash(state){
-      state.recordListHash = getRecordListHash(state.recordList)
+      if (state.recordList !== null){
+        state.recordListHash = getRecordListHash(state.recordList)
+      }
     },
     removeRecord(state,record: RecordItem){
       store.commit("fetchRecordList")

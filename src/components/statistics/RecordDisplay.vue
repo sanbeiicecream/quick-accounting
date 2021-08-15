@@ -29,7 +29,7 @@ export default class RecordDisplay extends Vue {
     this.$store.commit("getRecordListHash")
   }
   get currentMonthRecordHash() {
-    return this.$store.state.recordListHash[parseInt(this.$store.state.currentMonth) - 1];
+    return this.$store.state.recordListHash[parseInt(this.$store.state.currentMonth) - 1] || [];
   }
   get groupMonthRecordList(){
     return getGroupMonthRecordList(this.currentMonthRecordHash.recordList)
