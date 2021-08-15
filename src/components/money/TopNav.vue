@@ -27,6 +27,7 @@ export default class TopNav extends Vue{
     }
   }
   goBack(){
+    this.$store.state.isAdd = 'no'
     this.$store.state.payOrIncome = "pay"
     this.$store.state.selectedTagIds = []
   }
