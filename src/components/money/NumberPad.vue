@@ -1,7 +1,7 @@
 <template>
   <div class="container-wrap" ref="container">
     <label class="note">
-      <span>备注：</span><input type="text" v-model="noteValue" />
+      <span>备注：</span><input type="text" v-model="noteValue" @input="inputNote"/>
     </label>
     <label class="amount">
       <span>金额：</span><input v-bind:value="value" onfocus="this.blur()" type="text">
@@ -47,6 +47,12 @@ export default class NumberPad extends Vue {
   noteValue = '';
   isVisible = false
   createAt = "今天"
+  inputNote(){
+    if (this.noteValue.length > 25){
+      Toast("备注太多了！")
+      this.noteValue = this.noteValue.slice(0,15)
+    }
+  }
   inputAmount(event: MouseEvent) {
     let inputNode = event.target as HTMLButtonElement;
     let input = inputNode.textContent || '';
