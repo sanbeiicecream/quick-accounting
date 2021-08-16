@@ -259,8 +259,8 @@ export default class NumberPad extends Vue {
   float: left;
   font-weight: bold;
   $height: 70px;
+  font-size: 1.1em;
   > label {
-    font-size: 15px;
     display: inline-block;
     width: 50%;
     vertical-align: bottom;
