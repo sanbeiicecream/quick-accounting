@@ -39,7 +39,7 @@ export default class TopNav extends Vue{
     display: flex;
     background-color:	#D0D0D0;
     justify-content: center;
-    font-size: 18px;
+    font-size: 1.2em;
     height: 6vh;
     align-items: flex-end;
     position: relative;
@@ -58,7 +58,7 @@ export default class TopNav extends Vue{
     }
     .return{
       position: absolute;
-      left: 5%;
+      right: 5%;
       top: 30%;
       transform: translateY(-20%);
     }

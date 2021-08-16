@@ -22,13 +22,12 @@
 <script lang="ts">
 import Vue from 'vue';
 import {Component} from 'vue-property-decorator';
-import AddTags from '@/components/money/AddTag.vue';
 import Tags from '@/components/money/Tags.vue';
 import {Toast} from 'vant';
 import {createId} from '@/lib/createId';
 
 @Component({
-  components: {Tags, AddTags}
+  components: {Tags}
 })
 export default class AddType extends Vue {
   editId = '';
@@ -116,7 +115,7 @@ export default class AddType extends Vue {
 @import "~@/assets/style/helper.scss";
 
 .type-items-wrap {
-  $font-size: 16px;
+  $font-size: 1.2em;
   overflow: auto;
 
   > .type-items {

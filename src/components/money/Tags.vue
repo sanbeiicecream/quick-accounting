@@ -14,6 +14,7 @@
 import Vue from 'vue';
 import {Component, Prop} from 'vue-property-decorator';
 import {createId} from '@/lib/createId';
+import {Toast} from 'vant';
 
 @Component
 export default class Tags extends Vue {
@@ -45,6 +46,8 @@ export default class Tags extends Vue {
       }
       this.$store.commit('saveTag', {id: createId() + '', name: this.value, type: type});
       this.$store.state.isAdd = 'no';
+    }else {
+      Toast({message:"标签名不能为空",duration:1000})
     }
   }
 
@@ -94,19 +97,19 @@ export default class Tags extends Vue {
 
 <style lang="scss" scoped>
 .add-window {
-  margin: 10px auto;
-
+  margin: 10vh auto;
   > label {
     display: block;
-    padding: 20px 50px;
-    font-size: 1em;
+    padding: 30px 50px;
+    font-size: 1.2em;
   }
 
   > .button-wrap {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    font-size: 1.1em;
+    font-size: 1.2em;
+
   }
 }
 </style>
