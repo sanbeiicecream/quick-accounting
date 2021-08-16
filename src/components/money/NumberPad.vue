@@ -48,9 +48,9 @@ export default class NumberPad extends Vue {
   isVisible = false
   createAt = "今天"
   inputNote(){
-    if (this.noteValue.length > 25){
+    if (this.noteValue.length > 23){
       Toast("备注太多了！")
-      this.noteValue = this.noteValue.slice(0,15)
+      this.noteValue = this.noteValue.slice(0,23)
     }
   }
   inputAmount(event: MouseEvent) {

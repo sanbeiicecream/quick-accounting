@@ -22,11 +22,11 @@
         </van-popup>
 
 
-        <van-field v-model="amount" label="金额" type="number" placeholder="请输入金额" @input="amountInput"/>
+        <van-field v-model="amount" label="金额" type="number" placeholder="请输入金额" @input="inputAmount"/>
 <!--        <van-field v-model="createdAt" label="日期" placeholder="请选择日期" />-->
         <van-cell title="日期" :value="displayDate" @click="showCalendar = true" />
         <van-calendar v-model="showCalendar" @confirm="onConfirm" :min-date="minDate" :max-date="maxDate"/>
-        <van-field v-model="notes" @input="notesInput" label="备注" placeholder="请输入备注" />
+        <van-field v-model="notes" @input="inputNote" label="备注" placeholder="请输入备注" />
       </van-cell-group>
     </div>
     <div class="bottom">
@@ -191,20 +191,20 @@ export default class UpdateStatistics extends Vue {
     this.displayDate = dayjs(date).format("YYYY年M月D日")
     this.createAt = dayjs(date).toISOString()
   }
-  notesInput(){
-    if (this.notes.length >= 15){
-      Toast("只能输入25个字符")
-      this.notes = this.notes.slice(0,25)
+  inputNote(){
+    if (this.notes.length > 23){
+      Toast("备注太多了！")
+      this.notes = this.notes.slice(0,23)
     }
   }
-  amountInput(){
-    if (this.amount.length >= 8){
-      Toast("只能计算8位数呢！")
-      this.amount = this.amount.slice(0,8)
+  inputAmount(){
+    if (this.amount.length > 11){
+      Toast("太多的数字了")
+      this.amount = this.amount.slice(0,11)
     }else if (this.amount.length >= 2){
       if (this.amount[0] === "0" && this.amount[1] !== "."){
         Toast("格式不太对！")
-        this.amount = ""
+        this.amount = " 0"
       }
     }
   }
