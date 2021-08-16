@@ -16,7 +16,7 @@ export function getWeekOrMonthChartDate(type:string,records:Record[],payOrIncome
   }
   for (let i = 0; i < index; i++) {
     if (type === '周'){
-      currentRecord = records.find((item: {date: string,value:RecordItem[]}) => item.date === dayjs().subtract(i,'day').format("YYYY年M月D日"))
+      currentRecord = records.find((item: {date: string,value:RecordItem[]}) => item.date === dayjs().startOf("week").add(1 + i,'day').format("YYYY年M月D日"))
       chartData.keys.push(dayjs().subtract(i, 'day').format("M月D日"))
     }else {
       currentRecord = records.find((item: {date: string,value:RecordItem[]}) => item.date === dayjs().startOf("month").add(i, 'day').format("YYYY年M月D日"))
@@ -33,10 +33,6 @@ export function getWeekOrMonthChartDate(type:string,records:Record[],payOrIncome
     } else {
       chartData.values.push(0)
     }
-  }
-  if (type === '周'){
-    chartData.keys = chartData.keys.reverse()
-    chartData.values = chartData.values.reverse()
   }
   return chartData
 }
