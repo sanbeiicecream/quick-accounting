@@ -1,16 +1,16 @@
 <template>
   <div class="type-items-wrap">
     <ol v-if="$store.state.payOrIncome === 'pay' && $store.state.isAdd === 'no' && this.isEdit === false" class="type-items">
-      <li v-for="item in tagList" :key="item.id" :data-id="item.id" @touchstart.prevent="selectOrEdit" @mousedown="selectOrEdit"
-          @touchend.prevent="end" @mouseup="end">{{ item.name }}
+      <li v-for="item in tagList" :key="item.id" :data-id="item.id" @touchstart.prevent="selectOrEdit" @mousedown.prevent="selectOrEdit"
+          @touchend.prevent="end" @mouseup.prevent="end">{{ item.name }}
       </li>
       <li v-if="$store.state.selectedTagIds.length === 0" class="add" @click="add">
         <icon name="addTags"/>
       </li>
     </ol>
     <ol v-if="$store.state.payOrIncome === 'income' && $store.state.isAdd === 'no' && this.isEdit === false" class="type-items">
-      <li v-for="item in tagList" :key="item.id" :data-id="item.id" @touchstart.prevent="selectOrEdit" @mousedown="selectOrEdit"
-          @touchend.prevent="end" @mouseup="end">{{ item.name }}</li>
+      <li v-for="item in tagList" :key="item.id" :data-id="item.id" @touchstart.prevent="selectOrEdit" @mousedown.prevent="selectOrEdit"
+          @touchend.prevent="end" @mouseup.prevent="end">{{ item.name }}</li>
       <li v-if="$store.state.selectedTagIds.length === 0" class="add" @click="add">
         <icon name="addTags"/>
       </li>
@@ -72,12 +72,14 @@ export default class AddType extends Vue {
       this.timer = setTimeout(() => {
         this.isLongDown = true;
         this.edit(event);
-      }, 500);
+      }, 1000);
+      console.log(this.timer)
     }
   }
   end(event: MouseEvent) {
     if (!this.isLongDown) {
       clearTimeout(this.timer);
+      console.log("yyy")
       this.select(event);
     }
     this.timer = -1;
@@ -91,6 +93,8 @@ export default class AddType extends Vue {
     this.leftButtonContent = "删除"
     this.rightButtonContent = "更新"
     this.editValue = (event.target as HTMLOListElement).textContent || ""
+    this.timer = -1;
+    this.isLongDown = false;
   }
 
   select(event: MouseEvent) {
