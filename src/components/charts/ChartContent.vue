@@ -69,12 +69,14 @@ export default class ChartContent extends Vue {
     if (this.chart === undefined) return;
     this.chart.setOption({title: {text: title}});
     let chartNode = this.$refs.eChart as HTMLDivElement;
+    let wrapNode = this.$refs.wrapper as HTMLDivElement;
     if (order === '周' || order === '年') {
-      chartNode.style.width = document.documentElement.clientWidth + 'px';
+      chartNode.style.width = wrapNode.offsetWidth + "px"
+      // console.log(wrapNode.offsetWidth)
     } else {
       chartNode.style.border = 'none';
-      chartNode.style.width = Math.round(document.documentElement.clientWidth * ( 4 + (2 / 7))) + 'px';
-      (this.$refs.wrapper as HTMLDivElement).scrollLeft = parseInt(chartNode.style.width) * dayjs().get('date') / 30 - (document.documentElement.clientWidth / 2)
+      chartNode.style.width = Math.round(wrapNode.offsetWidth * ( 4 + (2 / 7))) + 'px';
+      (this.$refs.wrapper as HTMLDivElement).scrollLeft = chartNode.offsetWidth * dayjs().get('date') / 30 - (wrapNode.offsetWidth / 2)
     }
     this.getChartDate();
     this.chart.resize()
@@ -138,7 +140,7 @@ export default class ChartContent extends Vue {
 <style lang="scss" scoped>
 .wrapper {
   margin-top: 10px;
-  width: 100vw;
+  width: 100%;
   overflow: auto;
   &::-webkit-scrollbar {
     display: none;

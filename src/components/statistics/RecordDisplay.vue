@@ -47,19 +47,19 @@ export default class RecordDisplay extends Vue {
 .records-wrap {
   height: 70vh;
   overflow: auto;
+  width: 100%;
   > .recordItems {
     .content {
       > .content-top {
-        background-color: #DCDCDC;
+        background-color: #e9e9e9;
         height: 5vh;
         line-height: 5vh;
       }
-      .content-bottom{
+      > .content-bottom{
         height: 8vh;
         border-bottom: 1px solid 	#F5F5F5;
         position: relative;
         overflow: hidden;
-        width: 100vw;
         display: flex;
         align-items: center;
         .tag{

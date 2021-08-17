@@ -30,7 +30,7 @@ export default  class Money extends Vue{
       padding-top: 38px;
       padding-bottom: 38px;
       align-self: center;
-      width: 80vw;
+      width: 100%;
     }
   }
 </style>

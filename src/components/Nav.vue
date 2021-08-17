@@ -28,7 +28,7 @@ nav{
   flex-direction: row;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.25);
   font-size: 1em;
-  width: 100vw;
+  width: 100%;
   > .item{
     padding: 2px 0;
     display: flex;

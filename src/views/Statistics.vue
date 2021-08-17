@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="statistics-page">
     <Layout>
       <StatisticsTop/>
       <record-display/>

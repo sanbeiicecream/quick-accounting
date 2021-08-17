@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-wrapper">
+  <div class="layout-wrapper" ref="layout">
     <div class="content">
       <slot/>
     </div>
@@ -20,11 +20,12 @@ export default {
   justify-content: space-between;
   align-items: center;
   height: 100vh;
+  width: 100%;
   > .content{
-    width: 100vw;
     display: flex;
     align-items: center;
     flex-direction: column;
+    width: 100%;
   }
 }
 </style>

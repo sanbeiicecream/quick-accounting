@@ -215,7 +215,7 @@ export default class UpdateStatistics extends Vue {
   .content-wrap{
     background-color: #efefef;
     height: 100vh;
-    width: 100vw;
+    width: 100%;
     position: relative;
     > .top{
       display: flex;

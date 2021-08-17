@@ -43,7 +43,7 @@ export default class ChartTop extends Vue {
 <style lang="scss" scoped>
   .wrapper{
     height: 15vh;
-    width: 100vw;
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -56,7 +56,7 @@ export default class ChartTop extends Vue {
       color: white;
     }
     > .payOrIncome{
-      width: 30vw;
+      width: 30%;
       display: flex;
       justify-content: center;
       text-align: center;
@@ -69,7 +69,7 @@ export default class ChartTop extends Vue {
       }
     }
     > .orderByTime{
-      width: 60vw;
+      width: 100%;
       font-size: 1.2em;
       display: flex;
       justify-content: center;
