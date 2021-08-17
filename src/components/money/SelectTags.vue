@@ -79,7 +79,6 @@ export default class AddType extends Vue {
   end(event: MouseEvent) {
     if (!this.isLongDown) {
       clearTimeout(this.timer);
-      console.log("yyy")
       this.select(event);
     }
     this.timer = -1;
