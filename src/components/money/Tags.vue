@@ -57,6 +57,7 @@ export default class Tags extends Vue {
     this.$store.state.isAdd = 'no';
     this.$emit('update:isEdit', false);
     this.$emit('update:editId', '');
+    Toast({message:"删除标签成功",duration:1000})
   }
 
   update() {
@@ -71,6 +72,7 @@ export default class Tags extends Vue {
     }
     this.$emit('update:isEdit', false);
     this.$emit('update:editId', '');
+    Toast({message:"更新标签成功",duration:1000})
   }
 
 
