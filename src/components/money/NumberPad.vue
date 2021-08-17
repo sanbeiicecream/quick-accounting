@@ -1,31 +1,35 @@
 <template>
   <div class="container-wrap" ref="container">
-    <label class="note">
-      <span>备注：</span><input type="text" v-model="noteValue" @input="inputNote"/>
-    </label>
-    <label class="amount">
-      <span>金额：</span><input v-bind:value="value" onfocus="this.blur()" type="text">
-    </label>
-    <button @click="inputAmount">1</button>
-    <button @click="inputAmount">2</button>
-    <button @click="inputAmount">3</button>
-    <button @click="calculate('+')">+</button>
-    <button @click="clear">清除</button>
-    <button @click="inputAmount">4</button>
-    <button @click="inputAmount">5</button>
-    <button @click="inputAmount">6</button>
-    <button @click="calculate('-')">-</button>
-    <button @click="clearAll">清空</button>
-    <button @click="inputAmount">7</button>
-    <button @click="inputAmount">8</button>
-    <button @click="inputAmount">9</button>
-    <button @click="calculate('×')">×</button>
-    <button class="ok" @click="ok" ref="ok">完成</button>
-    <button @click="inputAmount">0</button>
-    <button @click="inputAmount">.</button>
-    <button class="date" @click="isVisible = true">{{createAt}}</button>
-    <button @click="calculate('÷')">÷</button>
-    <simple-calendar :is-visible.sync="isVisible" v-if="isVisible"/>
+    <div class="inputs">
+      <label class="note">
+        <span>备注：</span><input type="text" v-model="noteValue" @input="inputNote"/>
+      </label>
+      <label class="amount">
+        <span>金额：</span><input v-bind:value="value" onfocus="this.blur()" type="text">
+      </label>
+    </div>
+    <div class="buttons" v-if="isShow">
+      <button @click="inputAmount">1</button>
+      <button @click="inputAmount">2</button>
+      <button @click="inputAmount">3</button>
+      <button @click="calculate('+')">+</button>
+      <button @click="clear">清除</button>
+      <button @click="inputAmount">4</button>
+      <button @click="inputAmount">5</button>
+      <button @click="inputAmount">6</button>
+      <button @click="calculate('-')">-</button>
+      <button @click="clearAll">清空</button>
+      <button @click="inputAmount">7</button>
+      <button @click="inputAmount">8</button>
+      <button @click="inputAmount">9</button>
+      <button @click="calculate('×')">×</button>
+      <button class="ok" @click="ok" ref="ok">完成</button>
+      <button @click="inputAmount">0</button>
+      <button @click="inputAmount">.</button>
+      <button class="date" @click="isVisible = true">{{createAt}}</button>
+      <button @click="calculate('÷')">÷</button>
+      <simple-calendar :is-visible.sync="isVisible" v-if="isVisible"/>
+    </div>
   </div>
 </template>
 
@@ -47,6 +51,7 @@ export default class NumberPad extends Vue {
   noteValue = '';
   isVisible = false
   createAt = "今天"
+  isShow = true
   inputNote(){
     if (this.noteValue.length > 23){
       Toast("备注太多了！")
@@ -124,7 +129,6 @@ export default class NumberPad extends Vue {
     this.value = '0';
     (this.$refs.ok as HTMLButtonElement).textContent = '完成';
   }
-
   mounted() {
     let u = navigator.userAgent;
     let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
@@ -134,25 +138,19 @@ export default class NumberPad extends Vue {
     if (isAndroid) {
       //获取原窗口的高度
       let originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
-      window.onresize = function () {
+      window.onresize = () => {
         let resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
-        if (resizeHeight < originalHeight) {
-          //当软键盘弹起，在此处操作
-          container.style.marginBottom = '-200px';
-        } else {
-          //当软键盘收起，在此处操作
-          container.style.marginBottom = '0';
-        }
+        this.isShow = resizeHeight >= originalHeight;
       };
     }
     if (isiOS) {
       document.body.addEventListener('focusin', () => {
         //软键盘弹出的事件处理
-        //this.show_bo = false;
+        this.isShow = false;
       });
       document.body.addEventListener('focusout', () => {
         //软键盘收起的事件处理
-        //this.show_bo = true;
+        this.isShow = true;
       });
     }
   }
@@ -255,132 +253,133 @@ export default class NumberPad extends Vue {
 @import "~@/assets/style/helper.scss";
 
 .container-wrap {
-  @extend %clearFix;
-  float: left;
   font-weight: bold;
   $height: 70px;
   font-size: 1.1em;
-  > label {
-    display: inline-block;
-    width: 50%;
-    vertical-align: bottom;
-    border-top: 1px solid #D3D3D3;
-    font-family: Consolas, monospace;
-    &:nth-child(1) {
-      border-right: 1px solid #D3D3D3;
+  > .inputs{
+    > label {
+      display: inline-block;
+      width: 50%;
+      vertical-align: bottom;
+      border-top: 1px solid #D3D3D3;
+      font-family: Consolas, monospace;
+      &:nth-child(1) {
+        border-right: 1px solid #D3D3D3;
+      }
+      > input {
+        width: 60%;
+      }
+      > span {
+        padding-left: 5px;
+      }
     }
+  }
+  > .buttons{
+    @extend %clearFix;
+    > button {
+      height: $height;
+      width: 20%;
+      &.date{
+        font-size: 13px;
+      }
+      &:nth-child(1) {
+        border-bottom: 1px solid #D3D3D3;
+        border-top: 1px solid #D3D3D3;
+      }
 
-    > input {
-      width: 60%;
-    }
+      &:nth-child(2) {
+        border-bottom: 1px solid #D3D3D3;
+        border-left: 1px solid #D3D3D3;
+        border-top: 1px solid #D3D3D3;
+      }
 
-    > span {
-      padding-left: 5px;
+      &:nth-child(3) {
+        border-bottom: 1px solid #D3D3D3;
+        border-left: 1px solid #D3D3D3;
+        border-top: 1px solid #D3D3D3;
+      }
+
+      &:nth-child(4) {
+        border-bottom: 1px solid #D3D3D3;
+        border-left: 1px solid #D3D3D3;
+        border-top: 1px solid #D3D3D3;
+      }
+
+      &:nth-child(5) {
+        border-bottom: 1px solid #D3D3D3;
+        border-left: 1px solid #D3D3D3;
+        border-top: 1px solid #D3D3D3;
+      }
+
+      &:nth-child(6) {
+        border-bottom: 1px solid #D3D3D3;
+      }
+
+      &:nth-child(7) {
+        border-bottom: 1px solid #D3D3D3;
+        border-left: 1px solid #D3D3D3;
+      }
+
+      &:nth-child(8) {
+        border-bottom: 1px solid #D3D3D3;
+        border-left: 1px solid #D3D3D3;
+      }
+
+      &:nth-child(9) {
+        border-bottom: 1px solid #D3D3D3;
+        border-left: 1px solid #D3D3D3;
+      }
+
+      &:nth-child(10) {
+        border-bottom: 1px solid #D3D3D3;
+        border-left: 1px solid #D3D3D3;
+      }
+
+      &:nth-child(11) {
+        border-bottom: 1px solid #D3D3D3;
+      }
+
+      &:nth-child(12) {
+        border-bottom: 1px solid #D3D3D3;
+        border-left: 1px solid #D3D3D3;
+      }
+
+      &:nth-child(13) {
+        border-bottom: 1px solid #D3D3D3;
+        border-left: 1px solid #D3D3D3;
+      }
+
+      &:nth-child(14) {
+        border-bottom: 1px solid #D3D3D3;
+        border-left: 1px solid #D3D3D3;
+      }
+
+      &.ok {
+        float: right;
+        border-left: 1px solid #D3D3D3;
+      }
+
+      &:nth-child(15) {
+        height: 2*$height;
+      }
+
+      &:nth-child(16) {
+      }
+
+      &:nth-child(17) {
+        border-left: 1px solid #D3D3D3;
+      }
+
+      &:nth-child(18) {
+        border-left: 1px solid #D3D3D3;
+      }
+
+      &:nth-child(19) {
+        border-left: 1px solid #D3D3D3;
+      }
     }
   }
 
-  > button {
-    height: $height;
-    width: 20%;
-    &.date{
-      font-size: 13px;
-    }
-    &:nth-child(3) {
-      border-bottom: 1px solid #D3D3D3;
-      border-top: 1px solid #D3D3D3;
-    }
-
-    &:nth-child(4) {
-      border-bottom: 1px solid #D3D3D3;
-      border-left: 1px solid #D3D3D3;
-      border-top: 1px solid #D3D3D3;
-    }
-
-    &:nth-child(5) {
-      border-bottom: 1px solid #D3D3D3;
-      border-left: 1px solid #D3D3D3;
-      border-top: 1px solid #D3D3D3;
-    }
-
-    &:nth-child(6) {
-      border-bottom: 1px solid #D3D3D3;
-      border-left: 1px solid #D3D3D3;
-      border-top: 1px solid #D3D3D3;
-    }
-
-    &:nth-child(7) {
-      border-bottom: 1px solid #D3D3D3;
-      border-left: 1px solid #D3D3D3;
-      border-top: 1px solid #D3D3D3;
-    }
-
-    &:nth-child(8) {
-      border-bottom: 1px solid #D3D3D3;
-    }
-
-    &:nth-child(9) {
-      border-bottom: 1px solid #D3D3D3;
-      border-left: 1px solid #D3D3D3;
-    }
-
-    &:nth-child(10) {
-      border-bottom: 1px solid #D3D3D3;
-      border-left: 1px solid #D3D3D3;
-    }
-
-    &:nth-child(11) {
-      border-bottom: 1px solid #D3D3D3;
-      border-left: 1px solid #D3D3D3;
-    }
-
-    &:nth-child(12) {
-      border-bottom: 1px solid #D3D3D3;
-      border-left: 1px solid #D3D3D3;
-    }
-
-    &:nth-child(13) {
-      border-bottom: 1px solid #D3D3D3;
-    }
-
-    &:nth-child(14) {
-      border-bottom: 1px solid #D3D3D3;
-      border-left: 1px solid #D3D3D3;
-    }
-
-    &:nth-child(15) {
-      border-bottom: 1px solid #D3D3D3;
-      border-left: 1px solid #D3D3D3;
-    }
-
-    &:nth-child(16) {
-      border-bottom: 1px solid #D3D3D3;
-      border-left: 1px solid #D3D3D3;
-    }
-
-    &.ok {
-      float: right;
-      border-left: 1px solid #D3D3D3;
-    }
-
-    &:nth-child(17) {
-      height: 2*$height;
-    }
-
-    &:nth-child(18) {
-    }
-
-    &:nth-child(19) {
-      border-left: 1px solid #D3D3D3;
-    }
-
-    &:nth-child(20) {
-      border-left: 1px solid #D3D3D3;
-    }
-
-    &:nth-child(21) {
-      border-left: 1px solid #D3D3D3;
-    }
-  }
 
 }
 
