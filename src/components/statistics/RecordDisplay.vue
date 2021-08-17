@@ -51,7 +51,7 @@ export default class RecordDisplay extends Vue {
   > .recordItems {
     .content {
       > .content-top {
-        background-color: #e9e9e9;
+        background-color: #efefef;
         height: 5vh;
         line-height: 5vh;
       }

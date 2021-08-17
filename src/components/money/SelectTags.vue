@@ -1,16 +1,16 @@
 <template>
   <div class="type-items-wrap">
     <ol v-if="$store.state.payOrIncome === 'pay' && $store.state.isAdd === 'no' && this.isEdit === false" class="type-items">
-      <li v-for="item in tagList" :key="item.id" :data-id="item.id" @touchstart.prevent="selectOrEdit"
-          @touchend.prevent="end">{{ item.name }}
+      <li v-for="item in tagList" :key="item.id" :data-id="item.id" @touchstart.prevent="selectOrEdit" @mousedown="selectOrEdit"
+          @touchend.prevent="end" @mouseup="end">{{ item.name }}
       </li>
       <li v-if="$store.state.selectedTagIds.length === 0" class="add" @click="add">
         <icon name="addTags"/>
       </li>
     </ol>
     <ol v-if="$store.state.payOrIncome === 'income' && $store.state.isAdd === 'no' && this.isEdit === false" class="type-items">
-      <li v-for="item in tagList" :key="item.id" :data-id="item.id" @touchstart.prevent="selectOrEdit"
-          @touchend.prevent="end">{{ item.name }}</li>
+      <li v-for="item in tagList" :key="item.id" :data-id="item.id" @touchstart.prevent="selectOrEdit" @mousedown="selectOrEdit"
+          @touchend.prevent="end" @mouseup="end">{{ item.name }}</li>
       <li v-if="$store.state.selectedTagIds.length === 0" class="add" @click="add">
         <icon name="addTags"/>
       </li>
@@ -75,7 +75,6 @@ export default class AddType extends Vue {
       }, 500);
     }
   }
-
   end(event: MouseEvent) {
     if (!this.isLongDown) {
       clearTimeout(this.timer);
