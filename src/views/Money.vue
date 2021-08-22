@@ -32,7 +32,6 @@ export default class Money extends Vue{
     flex-direction: column;
     justify-content: space-between;
     height: 100vh;
-    width: 100vw;
     > .type-items-wrap{
       flex-grow: 1;
       padding-top: 38px;
