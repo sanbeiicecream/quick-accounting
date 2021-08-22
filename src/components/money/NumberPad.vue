@@ -1,6 +1,6 @@
 <template>
   <div class="container-wrap" ref="container">
-    <div class="inputs">
+    <div class="inputs" v-if="isVisibleInput">
       <label class="note">
         <span>备注：</span><input type="text" v-model="noteValue" @input="inputNote"/>
       </label>
@@ -53,6 +53,7 @@ export default class NumberPad extends Vue {
   isVisible = false
   createAt = "今天"
   isVisibleButton = true
+  isVisibleInput = true
   inputNote(){
     if (this.noteValue.length > 23){
       Toast("备注太多了！")
@@ -141,6 +142,7 @@ export default class NumberPad extends Vue {
       window.onresize = () => {
         let resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
         this.isVisibleButton = resizeHeight >= originalHeight;
+        this.isVisibleInput = !(this.$store.state.isEdit || this.$store.state.isAdd === 'is');
         this.$emit("update:currentHeight",resizeHeight)
       };
     }

@@ -10,6 +10,7 @@ const state: State = {
   selectedTagIds: [],
   payOrIncome: "pay",
   isAdd: "no",
+  isEdit: false,
   tagList: [],
   recordList: [],
   recordListHash: [],

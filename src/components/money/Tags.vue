@@ -20,7 +20,6 @@ export default class Tags extends Vue {
   @Prop() editId?: string;
   @Prop() leftButtonContent?: string;
   @Prop() rightButtonContent?: string;
-  @Prop() isEdit?: boolean;
   @Prop(String) editValue!: string
   value =  this.editValue.trim() || ""
 
@@ -53,9 +52,9 @@ export default class Tags extends Vue {
     this.$store.commit('removeTag', this.editId);
     console.log(this.editId)
     this.$store.state.isAdd = 'no';
-    this.$emit('update:isEdit', false);
     this.$emit('update:editId', '');
-    Toast({message:"删除标签成功",duration:1000})
+    this.$store.state.isEdit = false
+    Toast({message:"删除标签成功",duration:500})
   }
 
   update() {
@@ -68,9 +67,10 @@ export default class Tags extends Vue {
       }
       this.$store.commit('updateTag', {id: this.editId + '', name: this.value, type: type});
     }
-    this.$emit('update:isEdit', false);
+    this.$store.state.selectedTagIds = []
     this.$emit('update:editId', '');
-    Toast({message:"更新标签成功",duration:1000})
+    this.$store.state.isEdit = false
+    Toast({message:"更新标签成功",duration:500})
   }
 
 
@@ -98,11 +98,15 @@ export default class Tags extends Vue {
 <style lang="scss" scoped>
 .add-window {
   margin: 10vh auto;
-  width: 70%;
   > label {
     display: block;
-    padding: 30px 50px;
-    font-size: 1.2em;
+    width: 100%;
+    padding: 30px 0 30px 60px;
+    > input{
+      display: block;
+      font-size: 1.2em;
+      width: 100%;
+    }
   }
 
   > .button-wrap {

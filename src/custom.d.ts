@@ -5,6 +5,7 @@ export interface State  {
   selectedTagIds: string[]
   payOrIncome: string
   isAdd: string,
+  isEdit: boolean,
   tagList: Tag[]
   recordList: RecordItem[]
   recordListHash: RecordHash[]

@@ -11,7 +11,7 @@
     <ol v-if="$store.state.payOrIncome === 'income' && $store.state.isAdd === 'no' && this.isEdit === false" class="type-items">
       <li v-for="item in tagList" :key="item.id" :data-id="item.id" @touchstart.prevent="selectOrEdit" @mousedown.prevent="selectOrEdit"
           @touchend.prevent="end" @mouseup.prevent="end">{{ item.name }}</li>
-      <li v-if="$store.state.selectedTagIds.length === 0" class="add" @click="add">
+      <li v-if="!isEdit" class="add" @click="add">
         <icon name="addTags"/>
       </li>
     </ol>
@@ -35,11 +35,12 @@ export default class AddType extends Vue {
   placeholder = ""
   selectType = ""
   isLongDown = false;
-  isEdit = false
   leftButtonContent = ""
   rightButtonContent = ""
   editValue = ""
-
+  get isEdit(){
+    return this.$store.state.isEdit
+  }
   created() {
     this.$store.commit('fetchTags');
     if (this.$store.state.tagList.length === 0){
@@ -72,8 +73,7 @@ export default class AddType extends Vue {
       this.timer = setTimeout(() => {
         this.isLongDown = true;
         this.edit(event);
-      }, 1000);
-      console.log(this.timer)
+      }, 500);
     }
   }
   end(event: MouseEvent) {
@@ -86,7 +86,7 @@ export default class AddType extends Vue {
   }
 
   edit(event: MouseEvent) {
-    this.isEdit = true
+    this.$store.state.isEdit = true
     this.editId = (event.target as HTMLOListElement).dataset.id || ""
     this.placeholder = "修改后的标签名"
     this.leftButtonContent = "删除"
