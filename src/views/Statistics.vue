@@ -15,7 +15,7 @@ import {Vue,Component} from 'vue-property-decorator';
   components:{RecordDisplay, StatisticsTop}
 })
 export default class Statistics extends Vue{
-  beforeMount(){
+  mounted(){
     let div = this.$refs.container as HTMLDivElement
     div.style.height = document.documentElement.clientHeight + "px"
   }
