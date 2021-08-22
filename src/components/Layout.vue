@@ -8,9 +8,15 @@
 </template>
 
 <script lang="ts">
-export default {
-  name: 'Layout'
-};
+import {Component, Vue} from 'vue-property-decorator';
+
+@Component
+export default class Layout extends Vue{
+  mounted(){
+    let div = this.$refs.layout as HTMLDivElement
+    div.style.height = document.documentElement.clientHeight + "px"
+  }
+}
 </script>
 
 <style lang="scss" scoped>

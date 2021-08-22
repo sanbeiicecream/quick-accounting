@@ -8,7 +8,7 @@
         <span>金额：</span><input v-bind:value="value" onfocus="this.blur()" type="text">
       </label>
     </div>
-    <div class="buttons" v-if="isShow">
+    <div class="buttons" v-if="isVisibleButton">
       <button @click="inputAmount">1</button>
       <button @click="inputAmount">2</button>
       <button @click="inputAmount">3</button>
@@ -35,7 +35,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import {Component} from 'vue-property-decorator';
+import {Component, Prop} from 'vue-property-decorator';
 import SimpleCalendar from '@/components/money/SimpleCalendar.vue';
 import {Toast} from 'vant';
 import {RecordItem, Tag} from '@/custom';
@@ -47,11 +47,12 @@ Vue.use(Toast);
   components: {SimpleCalendar}
 })
 export default class NumberPad extends Vue {
+  @Prop() currentHeight?: string;
   value = '0';
   noteValue = '';
   isVisible = false
   createAt = "今天"
-  isShow = true
+  isVisibleButton = true
   inputNote(){
     if (this.noteValue.length > 23){
       Toast("备注太多了！")
@@ -133,24 +134,24 @@ export default class NumberPad extends Vue {
     let u = navigator.userAgent;
     let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
     let isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
-    let container = this.$refs.container as HTMLDivElement;
     //Android
     if (isAndroid) {
       //获取原窗口的高度
       let originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
       window.onresize = () => {
         let resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
-        this.isShow = resizeHeight >= originalHeight;
+        this.isVisibleButton = resizeHeight >= originalHeight;
+        this.$emit("update:currentHeight",resizeHeight)
       };
     }
     if (isiOS) {
       document.body.addEventListener('focusin', () => {
         //软键盘弹出的事件处理
-        this.isShow = false;
+        this.isVisibleButton = false;
       });
       document.body.addEventListener('focusout', () => {
         //软键盘收起的事件处理
-        this.isShow = true;
+        this.isVisibleButton = true;
       });
     }
   }

@@ -1,5 +1,5 @@
 <template>
-  <div class="content-wrap">
+  <div class="content-wrap" ref="container">
     <div class="top">
       <Icon class="icon" name="return1" @click.native="goBack"/>
       <span>详情</span>
@@ -67,6 +67,10 @@ export default class UpdateStatistics extends Vue {
   actionItem = ""
   notes = ""
   createAt = ""
+  mounted(){
+    let div = this.$refs.container as HTMLDivElement
+    div.style.height = document.documentElement.clientHeight + "px"
+  }
   onSelect(item: {name: string}) {
     this.showActionSheet = false;
     this.tagType = item.name

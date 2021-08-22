@@ -1,5 +1,4 @@
 <template>
-  <div>
     <div class="add-window">
       <label><input type="text" v-model="value" :placeholder=placeholder @input="isExceed"/></label>
       <div class="button-wrap">
@@ -7,7 +6,6 @@
         <button class="addOrEdit" @click="addOrUpdate" ref="addOrUpdate">{{ rightButtonContent }}</button>
       </div>
     </div>
-  </div>
 </template>
 
 <script lang="ts">
@@ -100,6 +98,7 @@ export default class Tags extends Vue {
 <style lang="scss" scoped>
 .add-window {
   margin: 10vh auto;
+  width: 70%;
   > label {
     display: block;
     padding: 30px 50px;
@@ -111,7 +110,6 @@ export default class Tags extends Vue {
     justify-content: space-around;
     align-items: center;
     font-size: 1.2em;
-
   }
 }
 </style>

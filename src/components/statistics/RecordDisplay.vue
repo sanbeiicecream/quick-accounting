@@ -45,7 +45,7 @@ export default class RecordDisplay extends Vue {
 
 <style lang="scss" scoped>
 .records-wrap {
-  height: 70vh;
+  height: 70%;
   overflow: auto;
   width: 100%;
   > .recordItems {

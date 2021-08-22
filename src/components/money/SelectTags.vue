@@ -119,7 +119,6 @@ export default class AddType extends Vue {
 .type-items-wrap {
   $font-size: 1.2em;
   overflow: auto;
-
   > .type-items {
     display: flex;
     flex-wrap: wrap;
@@ -143,8 +142,6 @@ export default class AddType extends Vue {
       display: flex;
       justify-content: center;
       align-items: center;
-      > .icon {
-      }
     }
 
     > .selected {
