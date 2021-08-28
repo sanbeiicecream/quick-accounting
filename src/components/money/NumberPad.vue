@@ -1,6 +1,6 @@
 <template>
   <div class="container-wrap" ref="container">
-    <div class="inputs" v-if="isVisibleInput">
+    <div class="inputs" v-if="inputIsVisible">
       <label class="note">
         <span>备注：</span><input type="text" v-model="noteValue" @input="inputNote"/>
       </label>
@@ -8,7 +8,7 @@
         <span>金额：</span><input v-bind:value="value" onfocus="this.blur()" type="text">
       </label>
     </div>
-    <div class="buttons" v-if="isVisibleButton">
+    <div class="buttons" v-if="buttonIsVisible">
       <button @click="inputAmount">1</button>
       <button @click="inputAmount">2</button>
       <button @click="inputAmount">3</button>
@@ -26,9 +26,9 @@
       <button class="ok" @click="ok" ref="ok">完成</button>
       <button @click="inputAmount">0</button>
       <button @click="inputAmount">.</button>
-      <button class="date" @click="isVisible = true">{{createAt}}</button>
+      <button class="date" @click="isVisibleDate = true">{{createAt}}</button>
       <button @click="calculate('÷')">÷</button>
-      <simple-calendar :is-visible.sync="isVisible" v-if="isVisible"/>
+      <simple-calendar :is-visible.sync="isVisibleDate" v-if="isVisibleDate"/>
     </div>
   </div>
 </template>
@@ -50,10 +50,25 @@ export default class NumberPad extends Vue {
   @Prop() currentHeight?: string;
   value = '0';
   noteValue = '';
-  isVisible = false
+  isVisibleDate = false
   createAt = "今天"
   isVisibleButton = true
   isVisibleInput = true
+
+  get inputIsVisible(){
+    if (this.$store.state.isAdd === 'is' || this.$store.state.isEdit){
+      return false
+    }else {
+      return this.isVisibleInput
+    }
+  }
+  get buttonIsVisible(){
+    if (this.$store.state.isAdd === 'is' || this.$store.state.isEdit){
+      return false
+    }else {
+      return this.isVisibleButton
+    }
+  }
   inputNote(){
     if (this.noteValue.length > 23){
       Toast("备注太多了！")
