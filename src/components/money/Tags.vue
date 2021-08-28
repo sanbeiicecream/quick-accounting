@@ -54,6 +54,7 @@ export default class Tags extends Vue {
     this.$store.state.isAdd = 'no';
     this.$emit('update:editId', '');
     this.$store.state.isEdit = false
+    this.$store.state.selectedTagIds = []
     Toast({message:"删除标签成功",duration:500})
   }
 
