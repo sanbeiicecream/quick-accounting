@@ -26,7 +26,7 @@
       <button class="ok" @click="ok" ref="ok">完成</button>
       <button @click="inputAmount">0</button>
       <button @click="inputAmount">.</button>
-      <button class="date" @click="isVisibleDate = true">{{createAt}}</button>
+      <button class="date" @click="isVisibleDate = true">{{ createAt }}</button>
       <button @click="calculate('÷')">÷</button>
       <simple-calendar :is-visible.sync="isVisibleDate" v-if="isVisibleDate"/>
     </div>
@@ -39,9 +39,10 @@ import {Component, Prop} from 'vue-property-decorator';
 import SimpleCalendar from '@/components/money/SimpleCalendar.vue';
 import {Toast} from 'vant';
 import {RecordItem, Tag} from '@/custom';
-import customParseFormat from 'dayjs/plugin/customParseFormat'
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import dayjs from 'dayjs';
-dayjs.extend(customParseFormat)
+
+dayjs.extend(customParseFormat);
 Vue.use(Toast);
 @Component({
   components: {SimpleCalendar}
@@ -50,31 +51,34 @@ export default class NumberPad extends Vue {
   @Prop() currentHeight?: string;
   value = '0';
   noteValue = '';
-  isVisibleDate = false
-  createAt = "今天"
-  isVisibleButton = true
-  isVisibleInput = true
+  isVisibleDate = false;
+  createAt = '今天';
+  isVisibleButton = true;
+  isVisibleInput = true;
 
-  get inputIsVisible(){
-    if (this.$store.state.isAdd === 'is' || this.$store.state.isEdit){
-      return false
-    }else {
-      return this.isVisibleInput
+  get inputIsVisible() {
+    if (this.$store.state.isAdd === 'is' || this.$store.state.isEdit) {
+      return false;
+    } else {
+      return this.isVisibleInput;
     }
   }
-  get buttonIsVisible(){
-    if (this.$store.state.isAdd === 'is' || this.$store.state.isEdit){
-      return false
-    }else {
-      return this.isVisibleButton
+
+  get buttonIsVisible() {
+    if (this.$store.state.isAdd === 'is' || this.$store.state.isEdit) {
+      return false;
+    } else {
+      return this.isVisibleButton;
     }
   }
-  inputNote(){
-    if (this.noteValue.length > 23){
-      Toast("备注太多了！")
-      this.noteValue = this.noteValue.slice(0,23)
+
+  inputNote() {
+    if (this.noteValue.length > 23) {
+      Toast('备注太多了！');
+      this.noteValue = this.noteValue.slice(0, 23);
     }
   }
+
   inputAmount(event: MouseEvent) {
     let inputNode = event.target as HTMLButtonElement;
     let input = inputNode.textContent || '';
@@ -88,14 +92,14 @@ export default class NumberPad extends Vue {
       let temArray = matchArray.filter((item) => {
         return item.length > 0;
       });
-      if (temArray.length === 1 && "+-×÷".indexOf(this.value.charAt(this.value.length - 1)) === -1 ) {
+      if (temArray.length === 1 && '+-×÷'.indexOf(this.value.charAt(this.value.length - 1)) === -1) {
         if (temArray[0].length >= 8) {
-          Toast({message: "计算金额不能超过8位数！",duration: 1000})
+          Toast({message: '计算金额不能超过8位数！', duration: 1000});
           return;
         }
       } else if (temArray.length === 2) {
         if (temArray[1].length >= 8) {
-          Toast({message: "计算金额不能超过8位数！",duration: 1000})
+          Toast({message: '计算金额不能超过8位数！', duration: 1000});
           return;
         }
       }
@@ -146,6 +150,7 @@ export default class NumberPad extends Vue {
     this.value = '0';
     (this.$refs.ok as HTMLButtonElement).textContent = '完成';
   }
+
   mounted() {
     let u = navigator.userAgent;
     let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
@@ -158,7 +163,7 @@ export default class NumberPad extends Vue {
         let resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
         this.isVisibleButton = resizeHeight >= originalHeight;
         this.isVisibleInput = !(this.$store.state.isEdit || this.$store.state.isAdd === 'is');
-        this.$emit("update:currentHeight",resizeHeight)
+        this.$emit('update:currentHeight', resizeHeight);
       };
     }
     if (isiOS) {
@@ -194,6 +199,7 @@ export default class NumberPad extends Vue {
       } else {
         this.value += type;
       }
+      if (this.value.slice(0, -1) === 'NaN') this.value = '0' + type;
       if (this.value.slice(0, -1).split('.').length > 1) {
         if (this.value.slice(0, -1).split('.')[1].length > 2) {
           this.value = parseFloat(this.value.slice(0, -1)).toFixed(2) + type;
@@ -233,33 +239,37 @@ export default class NumberPad extends Vue {
           temValue = parseFloat(temValue.toFixed(2));
         }
       }
-      this.value = temValue + '';
+      if (!isNaN(temValue)) {
+        this.value = temValue + '';
+      } else {
+        this.value = '0';
+      }
     } else {
-      if (this.$store.state.selectedTagIds.length > 0){
-        let currentRecord: RecordItem = {tags: [], notes:"",amount:"",createdAt:"",type:""}
+      if (this.$store.state.selectedTagIds.length > 0) {
+        let currentRecord: RecordItem = {tags: [], notes: '', amount: '', createdAt: '', type: ''};
         this.$store.state.selectedTagIds.forEach((item: string) => {
-          let currentTag = this.$store.state.tagList.find(((item1: Tag) => item1.id === item))
-          if (currentTag){
-            currentRecord.tags.push(currentTag)
+          let currentTag = this.$store.state.tagList.find(((item1: Tag) => item1.id === item));
+          if (currentTag) {
+            currentRecord.tags.push(currentTag);
           }
-        })
-        currentRecord.amount = this.value
-        currentRecord.notes = this.noteValue
-        if (this.createAt === "今天"){
-          currentRecord.createdAt = dayjs().toISOString()
-        }else {
-          currentRecord.createdAt = dayjs(this.createAt,"YYYY-M-D").toISOString()
+        });
+        currentRecord.amount = this.value;
+        currentRecord.notes = this.noteValue;
+        if (this.createAt === '今天') {
+          currentRecord.createdAt = dayjs().toISOString();
+        } else {
+          currentRecord.createdAt = dayjs(this.createAt, 'YYYY-M-D').toISOString();
         }
-        if (this.$store.state.payOrIncome === "pay"){
-          currentRecord.type = "-"
-        }else if(this.$store.state.payOrIncome === "income"){
-          currentRecord.type = "+"
+        if (this.$store.state.payOrIncome === 'pay') {
+          currentRecord.type = '-';
+        } else if (this.$store.state.payOrIncome === 'income') {
+          currentRecord.type = '+';
         }
-        this.$store.commit("saveRecord", currentRecord)
-        this.$router.push({path:"/statistics"})
-        Toast.success({message: "保存成功",duration: 1000})
-      }else {
-        Toast("请选择至少一个标签")
+        this.$store.commit('saveRecord', currentRecord);
+        this.$router.push({path: '/statistics'});
+        Toast.success({message: '保存成功', duration: 1000});
+      } else {
+        Toast('请选择至少一个标签');
       }
     }
     (this.$refs.ok as HTMLButtonElement).textContent = '完成';
@@ -274,32 +284,40 @@ export default class NumberPad extends Vue {
   font-weight: bold;
   $height: 70px;
   font-size: 1.1em;
-  > .inputs{
+
+  > .inputs {
     > label {
       display: inline-block;
       width: 50%;
       vertical-align: bottom;
       border-top: 1px solid #D3D3D3;
       font-family: Consolas, monospace;
+
       &:nth-child(1) {
         border-right: 1px solid #D3D3D3;
       }
+
       > input {
         width: 60%;
       }
+
       > span {
         padding-left: 5px;
       }
     }
   }
-  > .buttons{
+
+  > .buttons {
     @extend %clearFix;
+
     > button {
       height: $height;
       width: 20%;
-      &.date{
+
+      &.date {
         font-size: 13px;
       }
+
       &:nth-child(1) {
         border-bottom: 1px solid #D3D3D3;
         border-top: 1px solid #D3D3D3;
