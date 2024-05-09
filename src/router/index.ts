@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import VueRouter, {RouteConfig} from 'vue-router';
+import VueRouter, { RouteConfig } from 'vue-router';
 import NotFound from '@/views/NotFound.vue';
 import Statistics from '@/views/Statistics.vue';
 import Chart from '@/views/Chart.vue';
